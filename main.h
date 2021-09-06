@@ -12,6 +12,11 @@ struct Divipola
     string tipo;
     long int latitud;
     long int longitud;
-    struct Divipola *izquierdo;
-    struct Divipola *derecho;
 };
+
+struct SistemaCiudades
+{
+    string nom_dept;
+    string nom_mpio;
+};
+
