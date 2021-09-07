@@ -17,8 +17,9 @@ struct divipola
 
 struct SistemaCiudades
 {
+    string aglomeracion;
+    string FuncionCiudades;
     string nom_dept;
     string nom_mpio;
+    string divipola;
 };
-
-void Separar_Cadena(string Entrada, string &Comando, string &Auxiliar);
