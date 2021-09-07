@@ -1,5 +1,5 @@
 template <typename T>
-struct Nodo // este se usa para crear los arboles con los nodos necesarios 
+struct Nodo // este se usa para crear los arboles con los nodos necesarios
 {
     T datos;
     Nodo *cabeza;
@@ -11,3 +11,6 @@ struct Nodo // este se usa para crear los arboles con los nodos necesarios
         cola = col;
     }
 };
+
+template <typename T>
+list<T> llenarListaConDatos();
