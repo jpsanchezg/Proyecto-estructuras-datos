@@ -16,7 +16,6 @@ int main()
 
     getline(cin, line); //so, you get input to line after making the string stream?
     //HELP
-    cout << line << endl;
     if (line == "HELP" || line == "help") //this should be fine because you inputted to line and are comparing to line
     {
         cout << "HELPING.......OK!" << endl;

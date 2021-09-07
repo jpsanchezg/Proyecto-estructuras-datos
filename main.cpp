@@ -1,36 +1,55 @@
 #include <iostream>
 #include "main.h"
 #include <algorithm>
-#include <bits/stdc++.h>
+#include <fstream>
+#include <string>
 #include <list>
 #include "lista.h"
-#define Divipola "DIVIPOLA_CentrosPoblados.csv"
-#define SM "Datos-ICM-2019.xlsb"
+#include <wchar.h>
+#include <locale.h>
+#include <sstream>
 using namespace std;
 
 int main()
 {
-
+    cout << "$";
+    string comando;
     list<divipola> DiviLista;
     fstream fout;
+    getline(cin, comando);
+    string linea;
+    setlocale(LC_ALL, "");
+    if (comando == "carga_divipola DIVIPOLA_CentrosPoblados")
+    {
+        fout.open("DIVIPOLA_CentrosPoblados.csv", ios::in); // se lee el archivo .csv
+        getline(fout, linea); // se omite la primera linea del archivo que no contiene nada importante
+        while (getline(fout, linea))
+        {
+            divipola nodo;
+            stringstream stream(linea); // convertir la cadena a un stream
+            getline(stream, nodo.cod_cpob, ',');
 
-    // opens an existing csv file or creates a new file.
-    fout.open(Divipola, ios::out | ios::app);
+            getline(stream, nodo.nom_dept, ',');
 
-    //DiviLista = llenarListaConDatos<divipola>();
+            getline(stream, nodo.cod_mpio, ',');
 
-    divipola nodo;
-    nodo.latitud = 19999;
-    nodo.cod_cpob = 1;
-    nodo.cod_dept = 2;
-    nodo.cod_mpio = 3;
-    nodo.longitud = 4;
-    nodo.nom_dept = "hola";
-    nodo.nom_mpio = "como estas";
-    nodo.tipo = "tm";
-    DiviLista.push_back(nodo);
+            getline(stream, nodo.nom_mpio, ',');
+
+            getline(stream, nodo.cod_cpob, ',');
+
+            getline(stream, nodo.nom_cpob, ',');
+
+            getline(stream, nodo.tipo, ',');
+
+            getline(stream, nodo.latitud, ',');
+
+            getline(stream, nodo.longitud, ',');
+
+            DiviLista.push_back(nodo);
+        }
+    }
     for (auto itr = DiviLista.begin(); itr != DiviLista.end(); itr++)
     {
-        cout << itr->nom_mpio << " ";
+        cout << itr->cod_mpio << "   " << endl;
     }
 }
