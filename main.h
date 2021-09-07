@@ -2,7 +2,7 @@
 #include <iostream>
 using namespace std;
 
-struct Divipola
+struct divipola
 {
     int cod_dept;
     string nom_dept;
@@ -19,4 +19,3 @@ struct SistemaCiudades
     string nom_dept;
     string nom_mpio;
 };
-
