@@ -20,3 +20,5 @@ struct SistemaCiudades
     string nom_dept;
     string nom_mpio;
 };
+
+void Separar_Cadena(string Entrada, string &Comando, string &Auxiliar);

@@ -1,44 +1,54 @@
-#include <cstdlib> //why do you need this?
 #include <iostream>
+#include "main.h"
+#include <algorithm>
+#include <fstream>
 #include <string>
+#include <list>
+#include "lista.h"
+#include <wchar.h>
+#include <locale.h>
 #include <sstream>
 using namespace std;
 
 int main()
 {
-    system("TITLE centro de comando"); //never do this, instead use: SetConsoleTitle("centro de comando");
     cout << "$";
-    string line;
-    string command;
-    string argument;               //why do you need this now?
-    string empty;                  //why do you need this?
-    stringstream str_stream(line); //but...line is empty, so what is the point?
+    string comando;
+    list<divipola> DiviLista;
+    fstream fout;
+    string linea;
+    setlocale(LC_ALL, "");
+    if (comando == "carga_divipola DIVIPOLA_CentrosPoblados")
+    {
+        fout.open("DIVIPOLA_CentrosPoblados.csv", ios::in); // se lee el archivo .csv
+        getline(fout, linea); // se omite la primera linea del archivo que no contiene nada importante
+        while (getline(fout, linea))
+        {
+            divipola nodo;
+            stringstream stream(linea); // convertir la cadena a un stream
+            getline(stream, nodo.cod_cpob, ',');
 
-    getline(cin, line); //so, you get input to line after making the string stream?
-    //HELP
-    if (line == "HELP" || line == "help") //this should be fine because you inputted to line and are comparing to line
-    {
-        cout << "HELPING.......OK!" << endl;
-        main(); //never do this
-    }
-    //infomações
-    if (line == "INFO" || line == "info") //but...the input is in "line", not "line2"
-    {
-        cout << "© Centro de Comando 2012 , desenvolvido por BRUNOPESCAROLLI" << endl;
-        main(); //never do this
-    }
-    //versão
-    if (line == "VER") //but...the input is in "line", not "line3"
-    {
-        cout << "VERSAO 2.0.0.1 beta!" << endl;
-        main(); //never do this
-    }
-    else //what if they entered one of the other commands?
-    {
-        cout << "ERROR!" << endl;
-        main(); //never do this
-    }
+            getline(stream, nodo.nom_dept, ',');
 
-    system("PAUSE > NULL"); //never do this, instead use: cin.ignore(unsigned(-1), '\n');
-    return 0;
+            getline(stream, nodo.cod_mpio, ',');
+
+            getline(stream, nodo.nom_mpio, ',');
+
+            getline(stream, nodo.cod_cpob, ',');
+
+            getline(stream, nodo.nom_cpob, ',');
+
+            getline(stream, nodo.tipo, ',');
+
+            getline(stream, nodo.latitud, ',');
+
+            getline(stream, nodo.longitud, ',');
+
+            DiviLista.push_back(nodo);
+        }
+    }
+    for (auto itr = DiviLista.begin(); itr != DiviLista.end(); itr++)
+    {
+        cout << itr->cod_mpio << "   " << endl;
+    }
 }
