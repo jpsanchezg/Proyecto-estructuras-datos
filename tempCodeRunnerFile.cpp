@@ -1,1 +1,1 @@
-carga_divipola DIVIPOLA_CentrosPoblados
+listar_municipios
