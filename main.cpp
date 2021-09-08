@@ -31,8 +31,6 @@ int main()
     string Entrada;
     list<divipola> DiviLista; // se crea la lista de divipolas
     list<SistemaCiudades> SClista;
-    fstream fout; // lectura de los archivos
-    fstream fout2;
     string linea;
     string codigodepto;
     string codigoMunicipio;
@@ -67,34 +65,7 @@ int main()
             {
                 if (tokens[i + 1] == "DIVIPOLA_CentrosPoblados.csv")
                 {
-                    fout.open("DIVIPOLA_CentrosPoblados.csv", ios::in); // se lee el archivo .csv
-                    getline(fout, linea);                               // se omite la primera linea del archivo que no contiene nada importante
-                    setlocale(LC_CTYPE, "");
-                    while (getline(fout, linea))
-                    {
-                        divipola nodo;
-                        stringstream stream(linea); // convertir la cadena a un stream
-                        getline(stream, nodo.cod_dept, delimitador);
-
-                        getline(stream, nodo.nom_dept, delimitador);
-
-                        getline(stream, nodo.cod_mpio, delimitador);
-
-                        getline(stream, nodo.nom_mpio, delimitador);
-
-                        getline(stream, nodo.cod_cpob, delimitador);
-
-                        getline(stream, nodo.nom_cpob, delimitador);
-
-                        getline(stream, nodo.tipo, delimitador);
-
-                        getline(stream, nodo.latitud, delimitador);
-
-                        getline(stream, nodo.longitud, delimitador);
-
-                        DiviLista.push_back(nodo);
-                    }
-                    fout.close();
+                    Cargar_divipola(DiviLista);
                 }
                 else
                 {
@@ -169,28 +140,7 @@ int main()
             {
                 if (tokens[i + 1] == "Datos-ICM-2019.csv")
                 {
-
-                    fout2.open("Datos-ICM-2019.csv", ios::in); // se lee el archivo .csv
-                    setlocale(LC_ALL, "spanish");
-                    getline(fout2, linea); // se omite la primera linea del archivo que no contiene nada importante
-                    while (getline(fout2, linea))
-
-                    {
-                        SistemaCiudades nodo;
-
-                        stringstream stream(linea); // convertir la cadena a un stream
-                        getline(stream, nodo.aglomeracion, delimitador);
-
-                        getline(stream, nodo.FuncionCiudades, delimitador);
-
-                        getline(stream, nodo.nom_dept, delimitador);
-
-                        getline(stream, nodo.nom_mpio, delimitador);
-
-                        getline(stream, nodo.divipola, delimitador);
-                        SClista.push_back(nodo);
-                    }
-                    fout.close();
+                    cargar_SC(SClista);
                     if (SClista.empty() == 0)
                     {
                         cout << "La carga ha sido exitosa" << endl;

@@ -3,6 +3,9 @@
 
 bool Existencia(string codigo, list<divipola> DiviLista);
 
+void Cargar_divipola(list<divipola> &DiviLista);
+
+void cargar_SC(list<SistemaCiudades> &SClista);
 
 void Listar_Departamentos(list<divipola> DiviLista);
 
@@ -15,5 +18,6 @@ void Informacion(string codigodepto, list<divipola> DiviLista);
 void estaEnSistema(string codigoMunicipio, list<SistemaCiudades> SClista, list<divipola> DiviLista);
 
 void ayuda(string menuayuda,bool &comandoEncontrado);
+
 
 #endif

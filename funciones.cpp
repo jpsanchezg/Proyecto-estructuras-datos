@@ -28,6 +28,69 @@ bool Existencia(string codigo, list<divipola> DiviLista)
     return false;
 }
 
+void Cargar_divipola(list<divipola> &DiviLista)
+{
+    string linea;
+    fstream fout;
+    char delimitador = ',';
+    fout.open("DIVIPOLA_CentrosPoblados.csv", ios::in); // se lee el archivo .csv
+    getline(fout, linea);                               // se omite la primera linea del archivo que no contiene nada importante
+    setlocale(LC_CTYPE, "");
+    while (getline(fout, linea))
+    {
+        divipola nodo;
+        stringstream stream(linea); // convertir la cadena a un stream
+        getline(stream, nodo.cod_dept, delimitador);
+
+        getline(stream, nodo.nom_dept, delimitador);
+
+        getline(stream, nodo.cod_mpio, delimitador);
+
+        getline(stream, nodo.nom_mpio, delimitador);
+
+        getline(stream, nodo.cod_cpob, delimitador);
+
+        getline(stream, nodo.nom_cpob, delimitador);
+
+        getline(stream, nodo.tipo, delimitador);
+
+        getline(stream, nodo.latitud, delimitador);
+
+        getline(stream, nodo.longitud, delimitador);
+
+        DiviLista.push_back(nodo);
+    }
+    fout.close();
+}
+
+void cargar_SC(list<SistemaCiudades> &SClista)
+{
+    string linea;
+    fstream fout2;
+    char delimitador = ',';
+    fout2.open("Datos-ICM-2019.csv", ios::in); // se lee el archivo .csv
+    setlocale(LC_ALL, "spanish");
+    getline(fout2, linea); // se omite la primera linea del archivo que no contiene nada importante
+    while (getline(fout2, linea))
+
+    {
+        SistemaCiudades nodo;
+
+        stringstream stream(linea); // convertir la cadena a un stream
+        getline(stream, nodo.aglomeracion, delimitador);
+
+        getline(stream, nodo.FuncionCiudades, delimitador);
+
+        getline(stream, nodo.nom_dept, delimitador);
+
+        getline(stream, nodo.nom_mpio, delimitador);
+
+        getline(stream, nodo.divipola, delimitador);
+        SClista.push_back(nodo);
+    }
+    fout2.close();
+}
+
 // esta funcion despliega toda la informacion de los departamentos
 void Listar_Departamentos(list<divipola> DiviLista)
 {
@@ -211,7 +274,7 @@ void ayuda(string menuayuda, bool &comandoEncontrado)
         cout << "ESTA_EN_SISTEMA codigo_municipio        " << '\t' << "Determina si un municipio, con codigo dado por el usuario, existe dentro de las municipios definidos en el Sistema de Ciudades y cargados desde el archivo correspondiente." << endl;
         comandoEncontrado = true;
     }
-    if (menuayuda == "total")
+    if (menuayuda == "general")
     {
         cout << "Lista de todos los comandos:" << endl;
         cout << endl;
