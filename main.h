@@ -2,7 +2,7 @@
 #include <iostream>
 using namespace std;
 
-struct divipola
+struct divipola //estructura para la lista divipola
 {
     string cod_dept;
     string nom_dept;
@@ -15,7 +15,7 @@ struct divipola
     string longitud;
 };
 
-struct SistemaCiudades
+struct SistemaCiudades //estructura para la lista de sistema de ciudades
 {
     string aglomeracion;
     string FuncionCiudades;

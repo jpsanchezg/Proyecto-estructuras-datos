@@ -1,1 +1,0 @@
-otr->nom_mpio
