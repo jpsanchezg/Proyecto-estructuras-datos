@@ -66,6 +66,14 @@ int main()
                 if (tokens[i + 1] == "DIVIPOLA_CentrosPoblados.csv")
                 {
                     Cargar_divipola(DiviLista);
+                    if (DiviLista.empty() == 0)
+                    {
+                        cout << "La carga ha sido exitosa" << endl;
+                    }
+                    if (DiviLista.empty() == 1)
+                    {
+                        cout << "La carga no ha sido exitosa" << endl;
+                    }
                 }
                 else
                 {
@@ -132,7 +140,10 @@ int main()
                 }
                 else
                 {
-                    Informacion(codigodepto, DiviLista);
+                    vector<string> datos = Informacion(codigodepto, DiviLista);
+                    cout << endl;
+                    cout << "\tEl departamento " << datos[2] << " est� conformado por " << datos[0] << " municipios y " << datos[1] << " centros poblados. " << endl;
+                    cout << endl;
                 }
                 comandoEncontrado = true;
             }

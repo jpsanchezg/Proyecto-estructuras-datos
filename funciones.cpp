@@ -91,82 +91,16 @@ void cargar_SC(list<SistemaCiudades> &SClista)
     fout2.close();
 }
 
-// esta funcion despliega toda la informacion de los departamentos
-void Listar_Departamentos(list<divipola> DiviLista)
-{
-
-    list<divipola>::iterator iter;
-    vector<string> departamentos;
-
-    cout << endl;
-
-    for (iter = DiviLista.begin(); iter != DiviLista.end(); ++iter)
-    {
-        if (find(departamentos.begin(), departamentos.end(), iter->cod_dept) == departamentos.end())
-        {
-            cout << '\t' << iter->cod_dept << '\t' << iter->nom_dept << endl;
-            departamentos.push_back(iter->cod_dept);
-        }
-    }
-
-    cout << endl;
-}
-
-/*
-Esta funcion lista los municipios por el codigo del departamento 
-*/
-void Listar_Municipios(string codigodepto, list<divipola> DiviLista)
-{
-
-    list<divipola>::iterator iter;
-    vector<string> municipios;
-
-    cout << endl;
-
-    for (iter = DiviLista.begin(); iter != DiviLista.end(); ++iter)
-    {
-        //cout << "iter->cod_dept" << iter->cod_dept << "codigodepto" << codigodepto << endl;
-        if ((iter->cod_dept == codigodepto) && (find(municipios.begin(), municipios.end(), iter->cod_mpio) == municipios.end()))
-        {
-            cout << '\t' << iter->cod_mpio << '\t' << iter->nom_mpio << endl;
-            municipios.push_back(iter->cod_mpio);
-        }
-    }
-    cout << endl;
-}
-/*
-Funcion para listar las poblaciones por el codigo del municipio 
-*/
-void Listar_Poblaciones(string codigoMunicipio, list<divipola> DiviLista)
-{
-
-    list<divipola>::iterator iter;
-    vector<string> poblaciones;
-    cout << endl;
-
-    for (iter = DiviLista.begin(); iter != DiviLista.end(); ++iter)
-    {
-        if ((iter->cod_mpio == codigoMunicipio) && (find(poblaciones.begin(), poblaciones.end(), iter->cod_cpob) == poblaciones.end()))
-        {
-            cout << '\t' << iter->cod_cpob << '\t' << iter->nom_cpob << endl;
-            poblaciones.push_back(iter->cod_cpob);
-        }
-    }
-    cout << endl;
-}
-
 /*
 Funcion para mostrar la informacion del departartamento cargado en la divipola
 */
-void Informacion(string codigodepto, list<divipola> DiviLista)
+vector<string> Informacion(string codigodepto, list<divipola> DiviLista)
 {
 
     list<divipola>::iterator iter;
     vector<string> municipios;
     vector<string> poblaciones;
-    string nombre;
-
-    cout << endl;
+    vector<string> datos = {"", "", ""};
 
     for (iter = DiviLista.begin(); iter != DiviLista.end(); ++iter)
     {
@@ -177,12 +111,95 @@ void Informacion(string codigodepto, list<divipola> DiviLista)
         if ((iter->cod_dept == codigodepto) && find(poblaciones.begin(), poblaciones.end(), iter->cod_cpob) == poblaciones.end())
         {
             poblaciones.push_back(iter->cod_cpob);
-            nombre = iter->nom_dept;
+            datos[2] = iter->nom_dept;
         }
     }
 
-    cout << "\tEl departamento " << nombre << " esta conformado por " << municipios.size() << " municipios y " << poblaciones.size() << " centros poblados " << endl;
+    datos[0] = to_string(municipios.size());
+    datos[1] = to_string(poblaciones.size());
 
+    return datos;
+}
+
+// esta funcion despliega toda la informacion de los departamentos
+void Listar_Departamentos(list<divipola> DiviLista)
+{
+
+    list<divipola>::iterator iter;
+    vector<string> departamentos;
+    vector<string> datos;
+
+    cout << endl;
+    cout << "\tCODIGO" << '\t' << "NOMBRE"
+         << "\t\t\t\t\t\t\t\t"
+         << "NO. MUNICIPIOS"
+         << "\t\t"
+         << "NO. POBLACIONES" << endl;
+    cout << endl;
+
+    for (iter = DiviLista.begin(); iter != DiviLista.end(); ++iter)
+    {
+        if (find(departamentos.begin(), departamentos.end(), iter->cod_dept) == departamentos.end())
+        {
+            datos = Informacion(iter->cod_dept, DiviLista);
+            cout << '\t' << iter->cod_dept << '\t' << iter->nom_dept << "\t\t\t\t\t\t\t\t" << datos[0] << "\t\t" << datos[1] << endl;
+            departamentos.push_back(iter->cod_dept);
+        }
+    }
+    cout << endl;
+}
+
+/*
+Esta funcion lista los municipios por el codigo del departamento 
+*/
+void Listar_Municipios(string codigodepto, list<divipola> DiviLista)
+{
+
+    list<divipola>::iterator iter;
+
+    cout << endl;
+    cout << "\tCODIGO" << '\t' << "NOMBRE"
+         << "\t\t\t"
+         << "LATITUD"
+         << "\t\t\t"
+         << "LONGITUD" << endl;
+    cout << endl;
+
+    for (iter = DiviLista.begin(); iter != DiviLista.end(); ++iter)
+    {
+        if ((iter->cod_dept == codigodepto) && iter->tipo == "CM")
+        {
+            cout << '\t' << iter->cod_mpio << '\t' << iter->nom_mpio << "\t\t\t" << iter->latitud << "\t\t" << iter->longitud << endl;
+        }
+    }
+    cout << endl;
+}
+
+/*
+Funcion para listar las poblaciones por el codigo del municipio 
+*/
+void Listar_Poblaciones(string codigoMunicipio, list<divipola> DiviLista)
+{
+
+    list<divipola>::iterator iter;
+
+    cout << endl;
+    cout << "\tCODIGO"
+         << "\t\t"
+         << "NOMBRE"
+         << "\t\t\t\t"
+         << "LATITUD"
+         << "\t\t\t\t"
+         << "LONGITUD" << endl;
+    cout << endl;
+
+    for (iter = DiviLista.begin(); iter != DiviLista.end(); ++iter)
+    {
+        if ((iter->cod_mpio == codigoMunicipio) && iter->tipo == "CP")
+        {
+            cout << '\t' << iter->cod_cpob << '\t' << iter->nom_cpob << "\t\t\t" << iter->latitud << "\t\t" << iter->longitud << endl;
+        }
+    }
     cout << endl;
 }
 

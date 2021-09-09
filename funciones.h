@@ -13,7 +13,7 @@ void Listar_Municipios(string codigodepto, list<divipola> DiviLista);
 
 void Listar_Poblaciones(string codigoMunicipio, list<divipola> DiviLista);
 
-void Informacion(string codigodepto, list<divipola> DiviLista);
+vector<string> Informacion(string codigodepto, list<divipola> DiviLista);
 
 void estaEnSistema(string codigoMunicipio, list<SistemaCiudades> SClista, list<divipola> DiviLista);
 
