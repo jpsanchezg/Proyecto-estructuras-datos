@@ -129,7 +129,7 @@ int main()
                 }
                 comandoEncontrado = true;
             }
-            else if (tokens[i] == "info_sumaria ")
+            else if (tokens[i] == "info_sumaria")
             {
                 codigodepto = tokens[i + 1];
                 if (Existencia(codigodepto, DiviLista) == false)

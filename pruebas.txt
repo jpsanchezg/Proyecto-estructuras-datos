@@ -2,5 +2,7 @@ carga_divipola DIVIPOLA_CentrosPoblados.csv
 listar_departamentos
 listar_municipios 76
 listar_poblaciones 68081
+info_sumaria 68
+info_sumaria 5
 carga_SC Datos-ICM-2019.csv
 esta_en_sistema 05001
