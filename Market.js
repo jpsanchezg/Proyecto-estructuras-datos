@@ -517,7 +517,7 @@ export default function Market(props) {
                 />
                 <View style={[styles.buy_box, styles.buy_box_layout]}>
                   <Text style={styles.white} ellipsizeMode={'clip'}>
-                    {'BUY'}
+                    {'BUYs'}
                   </Text>
                 </View>
               </View>
