@@ -1,23 +1,26 @@
 #ifndef FUNCIONES_H_INCLUDED
 #define FUNCIONES_H_INCLUDED
 
-bool Existencia(string codigo, list<divipola> DiviLista);
+bool ExistenciaDepto(string codigo, list<datosdept> &lista);
 
-void Cargar_divipola(list<divipola> &DiviLista);
+bool ExistenciaMun(string codigo, list<datosMun> &lista);
+
+void Cargar_divipola(list<datosdept> &departamento, list<datosMun> &municipio, list<DatosPob> &poblacion);
 
 void cargar_SC(list<SistemaCiudades> &SClista);
 
-void Listar_Departamentos(list<divipola> DiviLista);
+void Listar_Departamentos(list<datosdept> departamento, list<datosMun> municipio, list<DatosPob> poblacion);
 
-void Listar_Municipios(string codigodepto, list<divipola> DiviLista);
+void Listar_Municipios(string codigodepto, list<datosdept> departamento, list<datosMun> municipios, list<DatosPob> poblacion);
 
-void Listar_Poblaciones(string codigoMunicipio, list<divipola> DiviLista);
+void Listar_Poblaciones(string codigoMunicipio, list<DatosPob> poblacion);
 
-vector<string> Informacion(string codigodepto, list<divipola> DiviLista);
+vector<string> Informacion(string codigodepto, list<datosdept> departamento, list<datosMun> municipio, list<DatosPob> poblacion);
 
-void estaEnSistema(string codigoMunicipio, list<SistemaCiudades> SClista, list<divipola> DiviLista);
+void estaEnSistema(string codigoMunicipio, list<SistemaCiudades> SClista, list<datosMun> municipio);
 
-void ayuda(string menuayuda,bool &comandoEncontrado);
+void ayuda(string menuayuda, bool &comandoEncontrado);
 
+vector<string> buscarpoblacion(string codigomun, string codigopob, list<datosMun> municipio);
 
 #endif

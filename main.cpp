@@ -29,7 +29,9 @@ int main()
     SetConsoleCP(1252);
     SetConsoleOutputCP(1252);
     string Entrada;
-    list<divipola> DiviLista; // se crea la lista de divipolas
+    list<datosdept> departamento;
+    list<datosMun> municipio;
+    list<DatosPob> poblacion;
     list<SistemaCiudades> SClista;
     string linea;
     string codigodepto;
@@ -62,15 +64,16 @@ int main()
         for (int i = 0; i < tokens.size(); i++)
         {
             if (tokens[i] == "carga_divipola")
+
             {
                 if (tokens[i + 1] == "DIVIPOLA_CentrosPoblados.csv")
                 {
-                    Cargar_divipola(DiviLista);
-                    if (DiviLista.empty() == 0)
+                    Cargar_divipola(departamento, municipio, poblacion);
+                    if (departamento.empty() == 0)
                     {
                         cout << "La carga ha sido exitosa" << endl;
                     }
-                    if (DiviLista.empty() == 1)
+                    if (departamento.empty() == 1)
                     {
                         cout << "La carga no ha sido exitosa" << endl;
                     }
@@ -84,7 +87,7 @@ int main()
             }
             else if (tokens[i] == "listar_departamentos")
             {
-                if (DiviLista.empty())
+                if (departamento.empty())
                 {
                     cout << endl;
                     cout << "\tNo hay departamentos cargados en memoria." << endl;
@@ -92,15 +95,16 @@ int main()
                 }
                 else
                 {
-                    Listar_Departamentos(DiviLista);
+                    Listar_Departamentos(departamento, municipio, poblacion);
                 }
                 comandoEncontrado = true;
             }
+
             else if (tokens[i] == "listar_municipios")
             {
                 codigodepto = tokens[i + 1]; // aca recoge el valor del codigo ejemplo listar_municipios 45 este recoge el 45 para luego ser buscado
 
-                if (Existencia(codigodepto, DiviLista) == false)
+                if (ExistenciaDepto(codigodepto, departamento) == false)
                 {
                     cout << endl;
                     cout << "\tNo hay municipios cargados en memoria para ese departamento." << endl;
@@ -108,7 +112,7 @@ int main()
                 }
                 else
                 {
-                    Listar_Municipios(codigodepto, DiviLista);
+                    Listar_Municipios(codigodepto, departamento, municipio, poblacion);
                 }
 
                 comandoEncontrado = true;
@@ -117,7 +121,7 @@ int main()
             {
                 codigoMunicipio = tokens[i + 1]; // aca recoge el valor del codigo ejemplo listar_poblaciones 45 este recoge el 45 para luego ser buscado
 
-                if (Existencia(codigoMunicipio, DiviLista) == false)
+                if (ExistenciaMun(codigoMunicipio, municipio) == false)
                 {
                     cout << endl;
                     cout << "\tNo hay poblaciones cargadas en memoria para ese municipio." << endl;
@@ -125,14 +129,14 @@ int main()
                 }
                 else
                 {
-                    Listar_Poblaciones(codigoMunicipio, DiviLista);
+                    Listar_Poblaciones(codigoMunicipio, poblacion);
                 }
                 comandoEncontrado = true;
             }
             else if (tokens[i] == "info_sumaria")
             {
                 codigodepto = tokens[i + 1];
-                if (Existencia(codigodepto, DiviLista) == false)
+                if (ExistenciaDepto(codigodepto, departamento) == false)
                 {
                     cout << endl;
                     cout << "\tNo hay informacion cargada en memoria para ese departamento." << endl;
@@ -140,9 +144,11 @@ int main()
                 }
                 else
                 {
-                    vector<string> datos = Informacion(codigodepto, DiviLista);
-                    cout << endl;
-                    cout << "\tEl departamento " << datos[2] << " est� conformado por " << datos[0] << " municipios y " << datos[1] << " centros poblados. " << endl;
+                    vector<string> datos = Informacion(codigodepto, departamento, municipio, poblacion);
+
+                    cout
+                        << endl;
+                    cout << "\tEl departamento " << datos[2] << " esta conformado por " << datos[0] << " municipios y " << datos[1] << " centros poblados. " << endl;
                     cout << endl;
                 }
                 comandoEncontrado = true;
@@ -173,7 +179,7 @@ int main()
                 string cadena;
 
                 codigoMunicipio = tokens[i + 1]; // aca recoge el valor del codigo ejemplo esta_en_sistema 45 este recoge el 45 para luego ser buscado
-                if (Existencia(codigoMunicipio, DiviLista) == false)
+                if (ExistenciaMun(codigoMunicipio, municipio) == false)
                 {
                     cout << endl;
                     cout << "\tNo hay informacion cargada en memoria para ese municipio." << endl;
@@ -181,7 +187,7 @@ int main()
                 }
                 else
                 {
-                    estaEnSistema(codigoMunicipio, SClista, DiviLista);
+                    estaEnSistema(codigoMunicipio, SClista, municipio);
                 }
                 comandoEncontrado = true;
             }
