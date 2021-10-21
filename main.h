@@ -55,7 +55,18 @@ struct SistemaCiudades //estructura para la lista de sistema de ciudades
 {
     string aglomeracion;
     string FuncionCiudades;
-    string nom_dept;
+    string cod_dept;
+    string nom_mpio;
+    string divipola;
+    string anio;
+    string personas;
+    string hectareas;
+};
+
+struct ciudadescapitales
+{
+    string funcionCiudades;
+    string cod_dept;
     string nom_mpio;
     string divipola;
 };

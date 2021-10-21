@@ -33,6 +33,7 @@ int main()
     list<datosMun> municipio;
     list<DatosPob> poblacion;
     list<SistemaCiudades> SClista;
+    list<ciudadescapitales> ciudadesCapitales;
     string linea;
     string codigodepto;
     string codigoMunicipio;
@@ -192,11 +193,18 @@ int main()
             }
             else if (tokens[i] == "componente3")
             {
-                
+                capitalesmenores(SClista, ciudadesCapitales);
+                if (!ciudadesCapitales.empty())
+                {
+                    cout << "se crearon " << ciudadesCapitales.size() << " ciudades capitales menores de cien mil habitantes" << endl;
+                }
+                else
+                {
+                    cout << "No se pueden crear las ciudades capitales menores de cien mil habitantes a partir del sistema de ciudades cargado en memoria" << endl;
+                }
             }
             else if (tokens[i] == "reporte")
             {
-
             }
             else if (tokens[i] == "ayuda")
             {
