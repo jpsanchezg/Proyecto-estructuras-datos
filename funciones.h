@@ -21,6 +21,8 @@ void estaEnSistema(string codigoMunicipio, list<SistemaCiudades> SClista, list<d
 
 void ayuda(string menuayuda, bool &comandoEncontrado);
 
+void ciudadesmenores
+
 vector<string> buscarpoblacion(string codigomun, string codigopob, list<datosMun> municipio);
 
 #endif

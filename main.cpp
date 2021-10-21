@@ -177,7 +177,6 @@ int main()
             else if (tokens[i] == "esta_en_sistema")
             {
                 string cadena;
-
                 codigoMunicipio = tokens[i + 1]; // aca recoge el valor del codigo ejemplo esta_en_sistema 45 este recoge el 45 para luego ser buscado
                 if (ExistenciaMun(codigoMunicipio, municipio) == false)
                 {
@@ -190,6 +189,14 @@ int main()
                     estaEnSistema(codigoMunicipio, SClista, municipio);
                 }
                 comandoEncontrado = true;
+            }
+            else if (tokens[i] == "componente3")
+            {
+                
+            }
+            else if (tokens[i] == "reporte")
+            {
+
             }
             else if (tokens[i] == "ayuda")
             {
