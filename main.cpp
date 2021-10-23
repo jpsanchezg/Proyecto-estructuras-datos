@@ -191,7 +191,7 @@ int main()
                 }
                 comandoEncontrado = true;
             }
-            else if (tokens[i] == "componente3")
+            else if (tokens[i] == "capital_menor")
             {
                 capitalesmenores(SClista, ciudadesCapitales);
                 if (!ciudadesCapitales.empty())
@@ -202,9 +202,12 @@ int main()
                 {
                     cout << "No se pueden crear las ciudades capitales menores de cien mil habitantes a partir del sistema de ciudades cargado en memoria" << endl;
                 }
+                comandoEncontrado = true;
             }
             else if (tokens[i] == "reporte")
             {
+                reporte(SClista);
+                comandoEncontrado = true;
             }
             else if (tokens[i] == "ayuda")
             {

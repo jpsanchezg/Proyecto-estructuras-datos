@@ -6,13 +6,9 @@ info_sumaria 68
 info_sumaria 5
 carga_SC Datos-ICM-2019.csv
 esta_en_sistema 05001
+capital_menor
 
-<< datos[0] << "             " << datos[1]
 
-            for (iter2 = poblacion.begin(); iter2 != poblacion.end(); ++iter2)
-            {
-                if (iter->codigoIdent == iter2->codigoMun && (find(poblaciones.begin(), poblaciones.end(), iter2->codigoPob) == poblaciones.end()))
-                {
-                    poblaciones.push_back(iter2->codigoPob);
-                }
-            }
+carga_divipola DIVIPOLA_CentrosPoblados.csv
+carga_SC Datos-ICM-2019.csv
+reporte

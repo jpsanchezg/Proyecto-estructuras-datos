@@ -3,11 +3,16 @@
 #include <locale.h>
 #include <string>
 #include <algorithm>
+#include <string>
 #include <bits/stdc++.h>
 #include <fstream>
+#include <conio.h>
 #include <list>
 #include "funciones.h"
 #include <vector>
+
+#include <stdio.h>
+#include <windows.h>
 using namespace std;
 
 bool ExistenciaDepto(string codigo, list<datosdept> &lista)
@@ -51,10 +56,10 @@ void Cargar_divipola(list<datosdept> &departamento, list<datosMun> &municipio, l
     string linea;
     fstream fout;
     char delimitador = ',';
-
+    setlocale(LC_CTYPE, "Spanich");
     fout.open("DIVIPOLA_CentrosPoblados.csv", ios::in); // se lee el archivo .csv
-    getline(fout, linea);                               // se omite la primera linea del archivo que no contiene nada importante
-    setlocale(LC_CTYPE, "");
+    setlocale(LC_ALL, "spanish");
+    getline(fout, linea); // se omite la primera linea del archivo que no contiene nada importante
     while (getline(fout, linea))
     {
         datosdept nododept;
@@ -92,8 +97,6 @@ void Cargar_divipola(list<datosdept> &departamento, list<datosMun> &municipio, l
         nodopob.codigoDept = nododept.codigo;
         nododept.longitud = nodopob.longitud;
         nodomun.longitud = nodopob.longitud;
-        nododept.Municipios.push_back(nodomun);
-        nodomun.poblaciones.push_back(nodopob);
         departamento.push_back(nododept);
         municipio.push_back(nodomun);
         poblacion.push_back(nodopob);
@@ -106,6 +109,7 @@ void cargar_SC(list<SistemaCiudades> &SClista)
     string linea;
     fstream fout2;
     char delimitador = ';';
+    setlocale(LC_ALL, "spanish");
     fout2.open("Datos-ICM-2019.csv", ios::in); // se lee el archivo .csv
     setlocale(LC_ALL, "spanish");
     getline(fout2, linea); // se omite la primera linea del archivo que no contiene nada importante
@@ -204,8 +208,10 @@ void Listar_Departamentos(list<datosdept> departamento, list<datosMun> municipio
         if (find(departamentos.begin(), departamentos.end(), iter->codigo) == departamentos.end())
         {
             // cout << iter->codigo << endl;
+
             datos = Informacion(iter->codigo, departamento, municipio, poblacion); // el lento esta aca
-            cout << "    " << iter->codigo << "        " << iter->nombre << "                 " << endl;
+            setlocale(LC_ALL, "");
+            cout << "    " << iter->codigo << "        " << iter->nombre << "                 " << datos[0] << "             " << datos[1] << endl;
             departamentos.push_back(iter->codigo);
         }
     }
@@ -387,7 +393,7 @@ void ayuda(string menuayuda, bool &comandoEncontrado)
 }
 
 /*
-Funcion del componente 3 que debe sacar la lista de ciudades con la poblacion menor a 100.000
+Funcion del capitales menores  que debe sacar la lista de ciudades con la poblacion menor a 100.000
 */
 
 void capitalesmenores(list<SistemaCiudades> SClista, list<ciudadescapitales> &CiuCap)
@@ -407,4 +413,145 @@ void capitalesmenores(list<SistemaCiudades> SClista, list<ciudadescapitales> &Ci
             CiuCap.push_back(nodoCC);
         }
     }
+}
+
+/*
+
+Funcion reporte que debe sacar el reporte del documento
+*/
+
+int totalaglomeracionesUrbanas(list<SistemaCiudades> SClista)
+{
+    list<SistemaCiudades>::iterator iter;
+    int contador = 0;
+    setlocale(LC_CTYPE, "Spanich");
+    string aglo = "Centro aglomeracion";
+    setlocale(LC_CTYPE, "Spanich");
+
+    for (iter = SClista.begin(); iter != SClista.end(); ++iter)
+    {
+
+        setlocale(LC_CTYPE, "Spanich");
+        if (iter->FuncionCiudades == aglo)
+        {
+            contador++;
+        }
+    }
+    return contador;
+}
+int totalCiudadesuni(list<SistemaCiudades> SClista)
+{
+    list<SistemaCiudades>::iterator iter;
+    int contador = 0;
+    setlocale(LC_CTYPE, "Spanich");
+    string uni = "Uninodal";
+    setlocale(LC_CTYPE, "Spanich");
+
+    for (iter = SClista.begin(); iter != SClista.end(); ++iter)
+    {
+
+        setlocale(LC_CTYPE, "Spanich");
+        if (iter->FuncionCiudades == uni)
+        {
+            contador++;
+        }
+    }
+    return contador;
+}
+
+int ciudadesMenores(list<SistemaCiudades> SClista)
+{
+    list<SistemaCiudades>::iterator iter;
+    ciudadescapitales nodoCC;
+    int contador = 0;
+    int poblacion = 0;
+    int cien = 100000;
+    for (iter = SClista.begin(); iter != SClista.end(); ++iter)
+    {
+        poblacion = stoi(iter->personas);
+        if (poblacion < cien && iter->FuncionCiudades == "Fuera SC")
+        {
+            contador++;
+        }
+    }
+    return contador;
+}
+
+int ciudadesMayores(list<SistemaCiudades> SClista)
+{
+    list<SistemaCiudades>::iterator iter;
+    ciudadescapitales nodoCC;
+    int contador = 0;
+    int poblacion = 0;
+    int cien = 100000;
+    for (iter = SClista.begin(); iter != SClista.end(); ++iter)
+    {
+        poblacion = stoi(iter->personas);
+        if (poblacion > cien && iter->FuncionCiudades == "Fuera SC")
+        {
+            contador++;
+        }
+    }
+    return contador;
+}
+
+int totalMuniAglo(list<SistemaCiudades> SClista)
+{
+    list<SistemaCiudades>::iterator iter;
+    list<SistemaCiudades>::iterator iter2;
+    int contador = 0;
+    setlocale(LC_CTYPE, "Spanich");
+    string aglo = "Centro aglomeracion";
+    setlocale(LC_CTYPE, "Spanich");
+
+    for (iter = SClista.begin(); iter != SClista.end(); ++iter)
+    {
+
+        setlocale(LC_CTYPE, "Spanich");
+        if (iter->FuncionCiudades == aglo)
+        {
+            for (iter2 = SClista.begin(); iter2 != SClista.end(); ++iter2)
+            {
+                if (iter2->cod_dept == iter->cod_dept && iter2->FuncionCiudades != "Fuera SC" && iter2->FuncionCiudades != aglo && iter2->FuncionCiudades != "Uninodal")
+                {
+                    contador++;
+                }
+            }
+        }
+    }
+    return contador;
+}
+
+void reporte(list<SistemaCiudades> SClista)
+{
+    list<SistemaCiudades>::iterator iter;
+    setlocale(LC_CTYPE, "Spanich");
+    int totaglo = totalaglomeracionesUrbanas(SClista);
+    int totaluni = totalCiudadesuni(SClista);
+    int ciudadesmascien = ciudadesMayores(SClista);
+    int ciudadesmenoscien = ciudadesMenores(SClista);
+    int totalSC = totaglo + totaluni;
+    int totalCol = SClista.size();
+    int totalmunAglo = totalMuniAglo(SClista) - totaglo;
+    int totalMuni = totalmunAglo + totaluni - 5;
+    cout << endl;
+    cout << "\t\tSistema Ciudades"
+         << "\t\t\t\t"
+         << "Municipios"
+         << "\t"
+         << "Poblacion Total"
+         << endl;
+    cout << endl;
+    cout << "\t\t Ciudades que hacen parte del sistema" << endl;
+    cout << "\t\t Aglomeraciones urbanas (" << totaglo << ")"
+         << "\t\t\t\t" << totalmunAglo << endl;
+    cout << "\t\t Ciudades Uninodales (" << totaluni << ")"
+         << "\t\t\t\t" << totaluni << endl;
+    cout << "\t\t Ciudades furea del sistema" << endl;
+    cout << "\t\t Ciudades con mas de cien mil habitantes (" << ciudadesmascien << ")" << endl;
+    cout << "\t\t Ciudades con menos de cien mil habitantes (" << ciudadesmenoscien << ")" << endl;
+    cout << "\t\t Total sistema de ciudades (" << totalSC << ")"
+         << "\t\t\t\t" << totalMuni << endl;
+    cout << "\t\t % con respecto a colombia (" << totalCol << ")" << endl;
+    cout << "\t\t Total colombia " << totalCol << endl;
 }
