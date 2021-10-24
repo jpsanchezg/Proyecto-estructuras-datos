@@ -6,9 +6,13 @@ info_sumaria 68
 info_sumaria 5
 carga_SC Datos-ICM-2019.csv
 esta_en_sistema 05001
+aglomeracion
+uninodal
 capital_menor
 
-
-carga_divipola DIVIPOLA_CentrosPoblados.csv
+entrega 2
 carga_SC Datos-ICM-2019.csv
+aglomeracion
+uninodal
+capital_menor
 reporte

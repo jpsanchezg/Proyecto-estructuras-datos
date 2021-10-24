@@ -55,3 +55,19 @@ struct ciudadescapitales
     string nom_mpio;
     string divipola;
 };
+
+struct Municipios_Ciudades
+{
+    string Nombre_Aglomeracion;
+    string Nombre;
+    string Divipola;
+    string Personas;
+    string Hectareas;
+};
+
+struct Aglomeracion
+{
+    string Nombre;
+    Municipios_Ciudades Ciudad_Principal;
+    list<Municipios_Ciudades> Ciudades_Componentes;
+};

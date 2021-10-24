@@ -27,6 +27,10 @@ void reporte(list<SistemaCiudades> SClista);
 
 int totalaglomeracionesUrbanas(list<SistemaCiudades> SClista);
 
-vector<string> buscarpoblacion(string codigomun, string codigopob, list<datosMun> municipio);
+int Accion_Aglomeracion(list<Aglomeracion> Aglomeraciones, int indicador, Municipios_Ciudades Elemento, string Funcion);
+
+void Crear_Aglomeraciones(list<SistemaCiudades> SClista, list<Aglomeracion> &Aglomeraciones);
+
+void Crear_Uninodales(list<SistemaCiudades> SClista, list<Municipios_Ciudades> &Ciudades_Uninodales);
 
 #endif

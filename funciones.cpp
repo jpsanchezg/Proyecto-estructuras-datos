@@ -360,6 +360,36 @@ void ayuda(string menuayuda, bool &comandoEncontrado)
         cout << "ESTA_EN_SISTEMA codigo_municipio        " << '\t' << "Determina si un municipio, con codigo dado por el usuario, existe dentro de las municipios definidos en el Sistema de Ciudades y cargados desde el archivo correspondiente." << endl;
         comandoEncontrado = true;
     }
+    if (menuayuda == "aglomeracion")
+    {
+        cout << "AGLOMERACION                            " << '\t' << "El comando debe crear los componentes C2, aglomeraciones urbanas, como componentes del sistema de Ciudades, de acuerdo con los datos guardados en memoria" << endl;
+        comandoEncontrado = true;
+    }
+    if (menuayuda == "uninodal")
+    {
+        cout << "UNINODAL                                " << '\t' << "El comando debe crear los componentes C1, ciudades uninodales, como componentes del sistema de Ciudades, de acuerdo con los datos guardados en memoria" << endl;
+        comandoEncontrado = true;
+    }
+    if (menuayuda == "capital_menor")
+    {
+        cout << "CAPITAL_MENOR                           " << '\t' << "El comando debe crear los componentes C3, ciudades capitales menores de cien mil habitantes, como componentes del sistema de Ciudades, de acuerdo con los datos guardados en memoria" << endl;
+        comandoEncontrado = true;
+    }
+    if (menuayuda == "reporte")
+    {
+        cout << "REPORTE                                 " << '\t' << "El comando debe crear un reporte con los datos del sistema" << endl;
+        comandoEncontrado = true;
+    }
+    if (menuayuda == "codificar")
+    {
+        cout << "CODIFICAR nombre_archivo.icmbin     " << '\t' << "El comando debe cargar en memoria la informaci�n completa del �ndice de Ciudades Modernas (ICM) y generar el archivo binario con la correspondiente codificaci�n de Huffman con toda la informaci�n que lo compone, almacen�ndolo en disco bajo el nombre: nombre_archivo.icmbin" << endl;
+        comandoEncontrado = true;
+    }
+    if (menuayuda == "decodificar")
+    {
+        cout << "DECODIFICAR nombre_archivo.icmbin   " << '\t' << "El comando debe cargar en memoria los datos contenidas en el archivo binario nombre_archivo.icmbin , que contiene una codificaci�n Huffman de toda la informaci�n que compone el �ndice de Ciudades Modernas y debe mostrarlo decodificado en pantalla" << endl;
+        comandoEncontrado = true;
+    }
     if (menuayuda == "general")
     {
         cout << "Lista de todos los comandos:" << endl;
@@ -382,13 +412,112 @@ void ayuda(string menuayuda, bool &comandoEncontrado)
         cout << endl;
         cout << "ESTA_EN_SISTEMA codigo_municipio        " << '\t' << "Determina si un municipio, con codigo dado por el usuario, existe dentro de las municipios definidos en el Sistema de Ciudades y cargados desde el archivo correspondiente." << endl;
         cout << endl;
+        cout << "AGLOMERACION                            " << '\t' << "El comando debe crear los componentes C2, aglomeraciones urbanas, como componentes del sistema de Ciudades, de acuerdo con los datos guardados en memoria" << endl;
+        cout << endl;
+        cout << "UNINODAL                                " << '\t' << "El comando debe crear los componentes C1, ciudades uninodales, como componentes del sistema de Ciudades, de acuerdo con los datos guardados en memoria" << endl;
+        cout << endl;
+        cout << "CAPITAL_MENOR                           " << '\t' << "El comando debe crear los componentes C3, ciudades capitales menores de cien mil habitantes, como componentes del sistema de Ciudades, de acuerdo con los datos guardados en memoria" << endl;
+        cout << endl;
+        cout << "REPORTE                                 " << '\t' << "El comando debe crear un reporte con los datos del sistema" << endl;
+        cout << endl;
+        cout << "CODIFICAR nombre_archivo.icmbin         " << '\t' << "El comando debe cargar en memoria la informaci�n completa del �ndice de Ciudades Modernas (ICM) y generar el archivo binario con la correspondiente codificaci�n de Huffman con toda la informaci�n que lo compone, almacen�ndolo en disco bajo el nombre: nombre_archivo.icmbin" << endl;
+        cout << endl;
+        cout << "DECODIFICAR nombre_archivo.icmbin       " << '\t' << "El comando debe cargar en memoria los datos contenidas en el archivo binario nombre_archivo.icmbin , que contiene una codificaci�n Huffman de toda la informaci�n que compone el �ndice de Ciudades Modernas y debe mostrarlo decodificado en pantalla" << endl;
+        cout << endl;
         cout << "SALIR                                           Termina la ejecucion de la aplicacion." << endl;
-        comandoEncontrado = true;
     }
-    if (menuayuda == "salir")
+}
+
+int Accion_Aglomeracion(list<Aglomeracion> Aglomeraciones, int indicador, Municipios_Ciudades Elemento, string Funcion)
+{
+    list<Aglomeracion>::iterator iter;
+
+    for (iter = Aglomeraciones.begin(); iter != Aglomeraciones.end(); iter++)
     {
-        cout << "SALIR                                           Termina la ejecucion de la aplicacion." << endl;
-        comandoEncontrado = true;
+        if ((iter->Nombre) == Elemento.Nombre_Aglomeracion)
+        {
+            if (indicador == 0)
+            {
+                return 1;
+            }
+            else if (indicador == 1)
+            {
+                iter->Ciudad_Principal = Elemento;
+            }
+            else if (indicador == 2)
+            {
+                (iter->Ciudades_Componentes).push_back(Elemento);
+            }
+        }
+    }
+    if (indicador == 0)
+    {
+        if ((Funcion == "Centro aglomeracion") || (Funcion == "En aglomeracion"))
+            return 0;
+    }
+    else
+    {
+        return 2;
+    }
+    return -1;
+}
+
+void Crear_Aglomeraciones(list<SistemaCiudades> SClista, list<Aglomeracion> &Aglomeraciones)
+{
+    list<SistemaCiudades>::iterator iter;
+    list<Aglomeracion>::iterator iter_aux;
+
+    Municipios_Ciudades Auxiliar_Componente;
+    Aglomeracion Auxiliar;
+    int Contador_Aglomeraciones = 0;
+    int Contador_Ciudades = 0;
+
+    for (iter = SClista.begin(); iter != SClista.end(); iter++)
+    {
+        Auxiliar_Componente.Divipola = iter->divipola;
+        Auxiliar_Componente.Nombre = iter->nom_mpio;
+        Auxiliar_Componente.Personas = iter->personas;
+        Auxiliar_Componente.Hectareas = iter->hectareas;
+        Auxiliar_Componente.Nombre_Aglomeracion = iter->aglomeracion;
+
+        if ((Accion_Aglomeracion(Aglomeraciones, 0, Auxiliar_Componente, iter->FuncionCiudades)) == 0)
+        {
+            Auxiliar.Nombre = iter->aglomeracion;
+            Aglomeraciones.push_back(Auxiliar);
+            Contador_Aglomeraciones += 1;
+        }
+
+        if ((iter->FuncionCiudades) == "Centro aglomeracion")
+        {
+            Accion_Aglomeracion(Aglomeraciones, 1, Auxiliar_Componente, iter->FuncionCiudades);
+            Contador_Ciudades += 1;
+        }
+        else if ((iter->FuncionCiudades) == "En aglomeracion")
+        {
+            Accion_Aglomeracion(Aglomeraciones, 2, Auxiliar_Componente, iter->FuncionCiudades);
+            Contador_Ciudades += 1;
+        }
+    }
+
+    cout << "\n Se crearon " << Contador_Aglomeraciones << " aglomeraciones urbanas, compuestas por " << Contador_Ciudades << " municipios" << endl;
+}
+
+void Crear_Uninodales(list<SistemaCiudades> SClista, list<Municipios_Ciudades> &Ciudades_Uninodales)
+{
+    list<SistemaCiudades>::iterator iter;
+
+    Municipios_Ciudades Auxiliar;
+
+    for (iter = SClista.begin(); iter != SClista.end(); iter++)
+    {
+        if ((iter->FuncionCiudades) == "Uninodal")
+        {
+            Auxiliar.Divipola = iter->divipola;
+            Auxiliar.Nombre = iter->nom_mpio;
+            Auxiliar.Personas = iter->personas;
+            Auxiliar.Hectareas = iter->hectareas;
+            Ciudades_Uninodales.push_back(Auxiliar);
+        }
     }
 }
 

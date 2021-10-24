@@ -16,13 +16,6 @@
 
 using namespace std;
 
-string aMayuscula(string cadena)
-{
-    for (int i = 0; i < cadena.length(); i++)
-        cadena[i] = toupper(cadena[i]);
-    return cadena;
-}
-
 int main()
 {
     setlocale(LC_CTYPE, "");
@@ -34,6 +27,8 @@ int main()
     list<DatosPob> poblacion;
     list<SistemaCiudades> SClista;
     list<ciudadescapitales> ciudadesCapitales;
+    list<Aglomeracion> Aglomeraciones;
+    list<Municipios_Ciudades> Ciudades_Uninodales;
     string linea;
     string codigodepto;
     string codigoMunicipio;
@@ -188,6 +183,28 @@ int main()
                 else
                 {
                     estaEnSistema(codigoMunicipio, SClista, municipio);
+                }
+                comandoEncontrado = true;
+            }
+            else if (tokens[i] == "aglomeracion")
+            {
+                Crear_Aglomeraciones(SClista, Aglomeraciones);
+                if (Aglomeraciones.empty())
+                {
+                    cout << "No se pueden crear las aglomeraciones urbanas a partir del Sistema de Ciudades cargado en memoria." << endl;
+                }
+                comandoEncontrado = true;
+            }
+            else if (tokens[i] == "uninodal")
+            {
+                Crear_Uninodales(SClista, Ciudades_Uninodales);
+                if (!Ciudades_Uninodales.empty())
+                {
+                    cout << "Se crearon " << Ciudades_Uninodales.size() << " ciudades uninodales." << endl;
+                }
+                else
+                {
+                    cout << "No se pueden crear las ciudades uninodales a partir del Sistema de Ciudades cargado en memoria." << endl;
                 }
                 comandoEncontrado = true;
             }
