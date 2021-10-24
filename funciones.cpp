@@ -420,7 +420,7 @@ void capitalesmenores(list<SistemaCiudades> SClista, list<ciudadescapitales> &Ci
 Funcion reporte que debe sacar el reporte del documento
 */
 
-int totalaglomeracionesUrbanas(list<SistemaCiudades> SClista)
+int totalaglomeracionesUrbanas(list<SistemaCiudades> SClista, vector<string> &codigosdeptoaglo)
 {
     list<SistemaCiudades>::iterator iter;
     int contador = 0;
@@ -434,6 +434,7 @@ int totalaglomeracionesUrbanas(list<SistemaCiudades> SClista)
         setlocale(LC_CTYPE, "Spanich");
         if (iter->FuncionCiudades == aglo)
         {
+            codigosdeptoaglo.push_back(iter->aglomeracion);
             contador++;
         }
     }
@@ -459,7 +460,7 @@ int totalCiudadesuni(list<SistemaCiudades> SClista)
     return contador;
 }
 
-int ciudadesMenores(list<SistemaCiudades> SClista)
+int ciudadesMenores(list<SistemaCiudades> SClista, vector<string> &codigosmunCME)
 {
     list<SistemaCiudades>::iterator iter;
     ciudadescapitales nodoCC;
@@ -469,15 +470,16 @@ int ciudadesMenores(list<SistemaCiudades> SClista)
     for (iter = SClista.begin(); iter != SClista.end(); ++iter)
     {
         poblacion = stoi(iter->personas);
-        if (poblacion < cien && iter->FuncionCiudades == "Fuera SC")
+        if (poblacion <= cien && iter->FuncionCiudades == "Fuera SC")
         {
+            codigosmunCME.push_back(iter->divipola);
             contador++;
         }
     }
     return contador;
 }
 
-int ciudadesMayores(list<SistemaCiudades> SClista)
+int ciudadesMayores(list<SistemaCiudades> SClista, vector<string> &codigosmunCMA)
 {
     list<SistemaCiudades>::iterator iter;
     ciudadescapitales nodoCC;
@@ -487,18 +489,20 @@ int ciudadesMayores(list<SistemaCiudades> SClista)
     for (iter = SClista.begin(); iter != SClista.end(); ++iter)
     {
         poblacion = stoi(iter->personas);
-        if (poblacion > cien && iter->FuncionCiudades == "Fuera SC")
+        if (poblacion >= cien && iter->FuncionCiudades == "Fuera SC")
         {
+            codigosmunCMA.push_back(iter->divipola);
             contador++;
         }
     }
     return contador;
 }
 
-int totalMuniAglo(list<SistemaCiudades> SClista)
+int totalMuniAglo(list<SistemaCiudades> SClista, vector<string> codigosdeptoaglo)
 {
     list<SistemaCiudades>::iterator iter;
     list<SistemaCiudades>::iterator iter2;
+    vector<string>::iterator viter;
     int contador = 0;
     setlocale(LC_CTYPE, "Spanich");
     string aglo = "Centro aglomeracion";
@@ -506,16 +510,143 @@ int totalMuniAglo(list<SistemaCiudades> SClista)
 
     for (iter = SClista.begin(); iter != SClista.end(); ++iter)
     {
+        for (int i = 0; i < codigosdeptoaglo.size(); i++)
+        {
+            if (iter->aglomeracion == codigosdeptoaglo[i])
+            {
+                contador++;
+            }
+        }
+    }
+    return contador;
+}
+int poblaciontotal(list<SistemaCiudades> SClista)
+{
+    list<SistemaCiudades>::iterator iter;
+    int total = 0;
+    int pob = 0;
+    for (iter = SClista.begin(); iter != SClista.end(); ++iter)
+    {
+        pob = stoi(iter->personas);
+        total = pob + total;
+    }
+    return total;
+}
+
+int totalpoblaaglo(list<SistemaCiudades> SClista, vector<string> codigosdeptoaglo)
+{
+    list<SistemaCiudades>::iterator iter;
+    list<SistemaCiudades>::iterator iter2;
+    int contador = 0;
+    int pob = 0;
+    setlocale(LC_CTYPE, "Spanich");
+    string aglo = "Centro aglomeracion";
+    setlocale(LC_CTYPE, "Spanich");
+    for (iter = SClista.begin(); iter != SClista.end(); ++iter)
+    {
+        for (int i = 0; i < codigosdeptoaglo.size(); i++)
+        {
+            if (iter->aglomeracion == codigosdeptoaglo[i])
+            {
+                pob = stoi(iter->personas);
+                contador = pob + contador;
+            }
+        }
+    }
+    return contador;
+}
+
+int totalPoblaUni(list<SistemaCiudades> SClista)
+{
+
+    list<SistemaCiudades>::iterator iter;
+    int contador = 0;
+    int pob = 0;
+    setlocale(LC_CTYPE, "Spanich");
+    string uni = "Uninodal";
+    setlocale(LC_CTYPE, "Spanich");
+
+    for (iter = SClista.begin(); iter != SClista.end(); ++iter)
+    {
 
         setlocale(LC_CTYPE, "Spanich");
-        if (iter->FuncionCiudades == aglo)
+        if (iter->FuncionCiudades == uni)
         {
-            for (iter2 = SClista.begin(); iter2 != SClista.end(); ++iter2)
+            pob = stoi(iter->personas);
+            contador = pob + contador;
+        }
+    }
+    return contador;
+}
+
+int TotalPobCiudMayor(list<SistemaCiudades> SClista)
+{
+    list<SistemaCiudades>::iterator iter;
+    int contador = 0;
+    int poblacion = 0;
+    int pob = 0;
+    int cien = 100000;
+    for (iter = SClista.begin(); iter != SClista.end(); ++iter)
+    {
+        poblacion = stoi(iter->personas);
+        if (poblacion >= cien && iter->FuncionCiudades == "Fuera SC")
+        {
+            pob = stoi(iter->personas);
+            contador = pob + contador;
+        }
+    }
+    return contador;
+}
+
+int TotalPobCiudMenor(list<SistemaCiudades> SClista)
+{
+    list<SistemaCiudades>::iterator iter;
+    int contador = 0;
+    int poblacion = 0;
+    int pob = 0;
+    int cien = 100000;
+    for (iter = SClista.begin(); iter != SClista.end(); ++iter)
+    {
+        poblacion = stoi(iter->personas);
+        if (poblacion <= cien && iter->FuncionCiudades == "Fuera SC")
+        {
+            pob = stoi(iter->personas);
+            contador = pob + contador;
+        }
+    }
+    return contador;
+}
+
+int totalmunCMayores(list<SistemaCiudades> SClista, vector<string> codigosmunCMA)
+{
+    list<SistemaCiudades>::iterator iter;
+    ciudadescapitales nodoCC;
+    int contador = 0;
+    for (int i = 0; i < codigosmunCMA.size(); i++)
+    {
+        for (iter = SClista.begin(); iter != SClista.end(); ++iter)
+        {
+            if (codigosmunCMA[i] == iter->divipola)
             {
-                if (iter2->cod_dept == iter->cod_dept && iter2->FuncionCiudades != "Fuera SC" && iter2->FuncionCiudades != aglo && iter2->FuncionCiudades != "Uninodal")
-                {
-                    contador++;
-                }
+                contador++;
+            }
+        }
+    }
+
+    return contador;
+}
+int totalmunCMEnores(list<SistemaCiudades> SClista, vector<string> codigosmunCMA)
+{
+    list<SistemaCiudades>::iterator iter;
+    ciudadescapitales nodoCC;
+    int contador = 0;
+    for (int i = 0; i < codigosmunCMA.size(); i++)
+    {
+        for (iter = SClista.begin(); iter != SClista.end(); ++iter)
+        {
+            if (codigosmunCMA[i] == iter->divipola)
+            {
+                contador++;
             }
         }
     }
@@ -526,14 +657,30 @@ void reporte(list<SistemaCiudades> SClista)
 {
     list<SistemaCiudades>::iterator iter;
     setlocale(LC_CTYPE, "Spanich");
-    int totaglo = totalaglomeracionesUrbanas(SClista);
-    int totaluni = totalCiudadesuni(SClista);
-    int ciudadesmascien = ciudadesMayores(SClista);
-    int ciudadesmenoscien = ciudadesMenores(SClista);
-    int totalSC = totaglo + totaluni;
-    int totalCol = SClista.size();
-    int totalmunAglo = totalMuniAglo(SClista) - totaglo;
-    int totalMuni = totalmunAglo + totaluni - 5;
+    vector<string> codigosdeptoaglo;
+    vector<string> codigosmunCMA;
+    vector<string> codigosmunCME;
+
+    float totaglo = totalaglomeracionesUrbanas(SClista, codigosdeptoaglo);
+    float totaluni = totalCiudadesuni(SClista);
+    float ciudadesmascien = ciudadesMayores(SClista, codigosmunCMA);
+    float ciudadesmenoscien = ciudadesMenores(SClista, codigosmunCME);
+    int totalMunCMA = totalmunCMayores(SClista, codigosmunCMA);
+    int totalMunCME = totalmunCMayores(SClista, codigosmunCME);
+    float totalSC = totaglo + totaluni;
+    float totalCol = SClista.size();
+    float totalmunAglo = totalMuniAglo(SClista, codigosdeptoaglo);
+    float totalMuni = totalmunAglo + totaluni;
+    int totalpob = poblaciontotal(SClista);
+    int totPobAglo = totalpoblaaglo(SClista, codigosdeptoaglo);
+    int totPobUni = totalPoblaUni(SClista);
+    int totPobCMA = TotalPobCiudMayor(SClista);
+    int totPobCME = TotalPobCiudMenor(SClista);
+    float totPobMun = totPobAglo + totPobUni;
+    float clac = totalMuni / totalCol;
+    float calcpob = totPobMun / totalpob;
+    float probatot = clac * 100;
+    float probapob = calcpob * 100;
     cout << endl;
     cout << "\t\tSistema Ciudades"
          << "\t\t\t\t"
@@ -544,14 +691,18 @@ void reporte(list<SistemaCiudades> SClista)
     cout << endl;
     cout << "\t\t Ciudades que hacen parte del sistema" << endl;
     cout << "\t\t Aglomeraciones urbanas (" << totaglo << ")"
-         << "\t\t\t\t" << totalmunAglo << endl;
+         << "\t\t\t\t" << totalmunAglo << "\t\t" << totPobAglo << endl;
     cout << "\t\t Ciudades Uninodales (" << totaluni << ")"
-         << "\t\t\t\t" << totaluni << endl;
+         << "\t\t\t\t" << totaluni << "\t\t" << totPobUni << endl;
     cout << "\t\t Ciudades furea del sistema" << endl;
-    cout << "\t\t Ciudades con mas de cien mil habitantes (" << ciudadesmascien << ")" << endl;
-    cout << "\t\t Ciudades con menos de cien mil habitantes (" << ciudadesmenoscien << ")" << endl;
+    cout << "\t\t Ciudades con mas de cien mil habitantes (" << ciudadesmascien << ")"
+         << "\t\t" << totalMunCMA << "\t\t" << totPobCMA << endl;
+    cout << "\t\t Ciudades con menos de cien mil habitantes (" << ciudadesmenoscien << ")"
+         << "\t" << totalMunCME << "\t\t" << totPobCME << endl;
     cout << "\t\t Total sistema de ciudades (" << totalSC << ")"
-         << "\t\t\t\t" << totalMuni << endl;
-    cout << "\t\t % con respecto a colombia (" << totalCol << ")" << endl;
-    cout << "\t\t Total colombia " << totalCol << endl;
+         << "\t\t\t\t" << totalMuni << "\t\t" << totPobMun << endl;
+    cout << "\t\t % con respecto a colombia (" << totalMuni << ")"
+         << "\t\t\t" << probatot << "\t\t" << probapob << endl;
+    cout << "\t\t Total colombia "
+         << "\t\t\t\t\t" << totalCol << "\t\t" << totalpob << endl;
 }
