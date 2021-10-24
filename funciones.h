@@ -1,23 +1,23 @@
 #ifndef FUNCIONES_H_INCLUDED
 #define FUNCIONES_H_INCLUDED
 
-bool ExistenciaDepto(string codigo, list<datosdept> &lista);
+bool ExistenciaDepto(string codigo, list<datosDiv> &lista);
 
-bool ExistenciaMun(string codigo, list<datosMun> &lista);
+bool ExistenciaMun(string codigo, list<datosDiv> &lista);
 
-void Cargar_divipola(list<datosdept> &departamento, list<datosMun> &municipio, list<DatosPob> &poblacion);
+void Cargar_divipola(list<datosDiv> &departamento, list<datosDiv> &municipio, list<DatosPob> &poblacion);
 
 void cargar_SC(list<SistemaCiudades> &SClista);
 
-void Listar_Departamentos(list<datosdept> departamento, list<datosMun> municipio, list<DatosPob> poblacion);
+void Listar_Departamentos(list<datosDiv> departamento, list<datosDiv> municipio, list<DatosPob> poblacion);
 
-void Listar_Municipios(string codigodepto, list<datosdept> departamento, list<datosMun> municipios, list<DatosPob> poblacion);
+void Listar_Municipios(string codigodepto, list<datosDiv> municipios);
 
 void Listar_Poblaciones(string codigoMunicipio, list<DatosPob> poblacion);
 
-vector<string> Informacion(string codigodepto, list<datosdept> departamento, list<datosMun> municipio, list<DatosPob> poblacion);
+vector<string> Informacion(string codigodepto, list<datosDiv> departamento, list<datosDiv> municipio, list<DatosPob> poblacion);
 
-void estaEnSistema(string codigoMunicipio, list<SistemaCiudades> SClista, list<datosMun> municipio);
+void estaEnSistema(string codigoMunicipio, list<SistemaCiudades> SClista, list<datosDiv> municipio);
 
 void ayuda(string menuayuda, bool &comandoEncontrado);
 

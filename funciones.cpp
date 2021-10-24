@@ -15,17 +15,17 @@
 #include <windows.h>
 using namespace std;
 
-bool ExistenciaDepto(string codigo, list<datosdept> &lista)
+bool ExistenciaDepto(string codigo, list<datosDiv> &lista)
 {
 
-    list<datosdept>::iterator iter;
+    list<datosDiv>::iterator iter;
     for (iter = lista.begin(); iter != lista.end(); ++iter)
     {
-        if (iter->codigo == codigo)
+        if (iter->codigoDept == codigo)
         {
             return true;
         }
-        else if (iter->codigo == codigo)
+        else if (iter->codigoDept == codigo)
         {
             return true;
         }
@@ -33,17 +33,17 @@ bool ExistenciaDepto(string codigo, list<datosdept> &lista)
     return false;
 }
 
-bool ExistenciaMun(string codigo, list<datosMun> &lista)
+bool ExistenciaMun(string codigo, list<datosDiv> &lista)
 {
 
-    list<datosMun>::iterator iter;
+    list<datosDiv>::iterator iter;
     for (iter = lista.begin(); iter != lista.end(); ++iter)
     {
-        if (iter->codigo == codigo)
+        if (iter->codigoMun == codigo)
         {
             return true;
         }
-        else if (iter->codigo == codigo)
+        else if (iter->codigoMun == codigo)
         {
             return true;
         }
@@ -51,7 +51,7 @@ bool ExistenciaMun(string codigo, list<datosMun> &lista)
     return false;
 }
 
-void Cargar_divipola(list<datosdept> &departamento, list<datosMun> &municipio, list<DatosPob> &poblacion)
+void Cargar_divipola(list<datosDiv> &departamento, list<datosDiv> &municipio, list<DatosPob> &poblacion)
 {
     string linea;
     fstream fout;
@@ -62,30 +62,30 @@ void Cargar_divipola(list<datosdept> &departamento, list<datosMun> &municipio, l
     getline(fout, linea); // se omite la primera linea del archivo que no contiene nada importante
     while (getline(fout, linea))
     {
-        datosdept nododept;
+        datosDiv nododept;
 
-        datosMun nodomun;
+        datosDiv nodomun;
         DatosPob nodopob;
 
         stringstream stream(linea); // convertir la cadena a un stream
 
-        getline(stream, nododept.codigo, delimitador);
+        getline(stream, nododept.codigoDept, delimitador);
 
         getline(stream, nododept.nombre, delimitador);
 
-        getline(stream, nodomun.codigo, delimitador);
+        getline(stream, nodomun.codigoMun, delimitador);
 
-        nododept.codigoIdent = nodomun.codigo;
+        nododept.codigoMun = nodomun.codigoMun;
 
         getline(stream, nodomun.nombre, delimitador);
 
         getline(stream, nodopob.codigoPob, delimitador);
 
-        nodomun.codigoIdent = nodopob.codigoPob;
-        nodomun.codigoatrs = nododept.codigo;
-        nodopob.codigoMun = nodomun.codigo;
+        nodomun.codigoPob = nodopob.codigoPob;
+        nodomun.codigoDept = nododept.codigoDept;
+        nodopob.codigoMun = nodomun.codigoMun;
         getline(stream, nodopob.nombre, delimitador);
-        nododept.codigoatrs = nodopob.codigoPob;
+        nododept.codigoPob = nodopob.codigoPob;
         getline(stream, nodopob.tipo, delimitador);
 
         getline(stream, nodopob.latitud, delimitador);
@@ -94,7 +94,7 @@ void Cargar_divipola(list<datosdept> &departamento, list<datosMun> &municipio, l
 
         getline(stream, nodopob.longitud, delimitador);
         nodomun.tipo = nodopob.tipo;
-        nodopob.codigoDept = nododept.codigo;
+        nodopob.codigoDept = nododept.codigoDept;
         nododept.longitud = nodopob.longitud;
         nodomun.longitud = nodopob.longitud;
         departamento.push_back(nododept);
@@ -143,13 +143,13 @@ void cargar_SC(list<SistemaCiudades> &SClista)
 /*
 Funcion para mostrar la informacion del departartamento cargado en la divipola
 */
-vector<string> Informacion(string codigodepto, list<datosdept> departamento, list<datosMun> municipio, list<DatosPob> poblacion)
+vector<string> Informacion(string codigodepto, list<datosDiv> departamento, list<datosDiv> municipio, list<DatosPob> poblacion)
 {
 
-    list<datosdept>::iterator iter;
-    list<datosMun>::iterator iter1;
+    list<datosDiv>::iterator iter;
+    list<datosDiv>::iterator iter1;
     list<DatosPob>::iterator iter2;
-    list<datosMun>::iterator iter3;
+    list<datosDiv>::iterator iter3;
     vector<string> municipios;
     vector<string> poblaciones;
     vector<string> datos = {"", "", ""};
@@ -157,20 +157,20 @@ vector<string> Informacion(string codigodepto, list<datosdept> departamento, lis
     for (iter = departamento.begin(); iter != departamento.end(); ++iter)
     {
         // cout << iter1->codigoIdent << endl;
-        if (iter->codigo == codigodepto)
+        if (iter->codigoDept == codigodepto)
         {
             for (iter1 = municipio.begin(); iter1 != municipio.end(); ++iter1)
             {
-                if (iter->codigoIdent == iter1->codigo && (find(municipios.begin(), municipios.end(), iter1->codigo) == municipios.end()))
+                if (iter->codigoDept == iter1->codigoDept && (find(municipios.begin(), municipios.end(), iter1->codigoMun) == municipios.end()))
                 {
-                    municipios.push_back(iter1->codigo);
+                    municipios.push_back(iter1->codigoMun);
                     // cout << iter2->codigo << endl;
                     // cout << iter1->codigoIdent << endl;
                 }
             }
             for (iter2 = poblacion.begin(); iter2 != poblacion.end(); ++iter2)
             {
-                if (iter->codigoIdent == iter2->codigoMun && (find(poblaciones.begin(), poblaciones.end(), iter2->codigoPob) == poblaciones.end()))
+                if (iter->codigoMun == iter2->codigoMun && (find(poblaciones.begin(), poblaciones.end(), iter2->codigoPob) == poblaciones.end()))
                 {
                     poblaciones.push_back(iter2->codigoPob);
                 }
@@ -184,11 +184,11 @@ vector<string> Informacion(string codigodepto, list<datosdept> departamento, lis
 }
 
 // esta funcion despliega toda la informacion de los departamentos
-void Listar_Departamentos(list<datosdept> departamento, list<datosMun> municipio, list<DatosPob> poblacion)
+void Listar_Departamentos(list<datosDiv> departamento, list<datosDiv> municipio, list<DatosPob> poblacion)
 {
 
-    list<datosdept>::iterator iter;
-    list<datosMun>::iterator iter1;
+    list<datosDiv>::iterator iter;
+    list<datosDiv>::iterator iter1;
     list<DatosPob>::iterator iter2;
     vector<string> departamentos;
     vector<string> datos;
@@ -205,14 +205,14 @@ void Listar_Departamentos(list<datosdept> departamento, list<datosMun> municipio
 
     for (iter = departamento.begin(); iter != departamento.end(); ++iter)
     {
-        if (find(departamentos.begin(), departamentos.end(), iter->codigo) == departamentos.end())
+        if (find(departamentos.begin(), departamentos.end(), iter->codigoDept) == departamentos.end())
         {
             // cout << iter->codigo << endl;
 
-            datos = Informacion(iter->codigo, departamento, municipio, poblacion); // el lento esta aca
+            datos = Informacion(iter->codigoDept, departamento, municipio, poblacion); // el lento esta aca
             setlocale(LC_ALL, "");
-            cout << "    " << iter->codigo << "        " << iter->nombre << "                 " << datos[0] << "             " << datos[1] << endl;
-            departamentos.push_back(iter->codigo);
+            cout << "    " << iter->codigoDept << "        " << iter->nombre << "                 " << datos[0] << "             " << datos[1] << endl;
+            departamentos.push_back(iter->codigoDept);
         }
     }
     cout << endl;
@@ -221,11 +221,11 @@ void Listar_Departamentos(list<datosdept> departamento, list<datosMun> municipio
 /*
 Esta funcion lista los municipios por el codigo del departamento
 */
-void Listar_Municipios(string codigodepto, list<datosdept> departamento, list<datosMun> municipios, list<DatosPob> poblacion)
+void Listar_Municipios(string codigodepto, list<datosDiv> municipios)
 {
 
-    list<datosdept>::iterator iter;
-    list<datosMun>::iterator iter2;
+    list<datosDiv>::iterator iter;
+    list<datosDiv>::iterator iter2;
     list<DatosPob>::iterator iterG;
     cout << endl;
     cout << "    CODIGO"
@@ -235,9 +235,9 @@ void Listar_Municipios(string codigodepto, list<datosdept> departamento, list<da
 
     for (iter2 = municipios.begin(); iter2 != municipios.end(); ++iter2)
     {
-        if (iter2->codigoatrs == codigodepto && iter2->tipo == "CM")
+        if (iter2->codigoDept == codigodepto && iter2->tipo == "CM")
         {
-            cout << "    " << iter2->codigo << "    " << iter2->nombre << endl;
+            cout << "    " << iter2->codigoMun << "    " << iter2->nombre << endl;
         }
     }
 }
@@ -276,7 +276,7 @@ void Listar_Poblaciones(string codigoMunicipio, list<DatosPob> poblacion)
 funcion para determinar si un municipio esta en el sistema de ciudades usando la divipola para poder
 idnetificar a los municipios en la divipola y en el sistema de ciudades
 */
-void estaEnSistema(string codigoMunicipio, list<SistemaCiudades> SClista, list<datosMun> municipio)
+void estaEnSistema(string codigoMunicipio, list<SistemaCiudades> SClista, list<datosDiv> municipio)
 {
 
     bool encontroSCMU = false;
@@ -288,15 +288,15 @@ void estaEnSistema(string codigoMunicipio, list<SistemaCiudades> SClista, list<d
     }
     if (!SClista.empty())
     {
-        list<datosMun>::iterator iter;
+        list<datosDiv>::iterator iter;
         list<SistemaCiudades>::iterator otr;
         for (iter = municipio.begin(); iter != municipio.end(); ++iter)
         {
-            if (iter->codigo == codigoMunicipio)
+            if (iter->codigoMun == codigoMunicipio)
             {
                 for (otr = SClista.begin(); otr != SClista.end(); otr++)
                 {
-                    if (otr->divipola == iter->codigo)
+                    if (otr->divipola == iter->codigoMun)
                     {
                         encontroSCMU = true;
                     }
@@ -533,7 +533,7 @@ void capitalesmenores(list<SistemaCiudades> SClista, list<ciudadescapitales> &Ci
     for (iter = SClista.begin(); iter != SClista.end(); ++iter)
     {
         poblacion = stoi(iter->personas);
-        if (poblacion < 100000)
+        if (poblacion <= 100000)
         {
             nodoCC.funcionCiudades = iter->FuncionCiudades;
             nodoCC.cod_dept = iter->cod_dept;

@@ -13,29 +13,17 @@ struct DatosPob
     string longitud;
 };
 
-struct datosMun
+struct datosDiv
 {
-    string codigo;
+    string codigoDept;
+    string codigoMun;
+    string codigoPob;
     string nombre;
-    string codigoIdent; // lista hacia adelante
-    string codigoatrs;
     string tipo;
     string latitud;
     string longitud;
 };
 
-struct datosdept
-{
-    string codigo;
-    string nombre;
-    string codigoIdent; // lista hacia adelante
-    string codigoatrs;
-    string latitud;
-    string longitud;
-    datosdept()
-    {
-    }
-};
 struct SistemaCiudades // estructura para la lista de sistema de ciudades
 {
     string aglomeracion;

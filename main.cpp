@@ -22,8 +22,8 @@ int main()
     SetConsoleCP(1252);
     SetConsoleOutputCP(1252);
     string Entrada;
-    list<datosdept> departamento;
-    list<datosMun> municipio;
+    list<datosDiv> departamento;
+    list<datosDiv> municipio;
     list<DatosPob> poblacion;
     list<SistemaCiudades> SClista;
     list<ciudadescapitales> ciudadesCapitales;
@@ -108,7 +108,7 @@ int main()
                 }
                 else
                 {
-                    Listar_Municipios(codigodepto, departamento, municipio, poblacion);
+                    Listar_Municipios(codigodepto, municipio);
                 }
 
                 comandoEncontrado = true;
