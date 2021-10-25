@@ -533,7 +533,7 @@ void capitalesmenores(list<SistemaCiudades> SClista, list<ciudadescapitales> &Ci
     for (iter = SClista.begin(); iter != SClista.end(); ++iter)
     {
         poblacion = stoi(iter->personas);
-        if (poblacion <= 100000)
+        if (poblacion < 100000)
         {
             nodoCC.funcionCiudades = iter->FuncionCiudades;
             nodoCC.cod_dept = iter->cod_dept;

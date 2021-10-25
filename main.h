@@ -20,8 +20,6 @@ struct datosDiv
     string codigoPob;
     string nombre;
     string tipo;
-    string latitud;
-    string longitud;
 };
 
 struct SistemaCiudades // estructura para la lista de sistema de ciudades
