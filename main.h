@@ -2,29 +2,15 @@
 #include <iostream>
 using namespace std;
 
-struct DatosPob
+struct Divipola
 {
-    string codigoDept;
-    string codigoMun;
-    string codigoPob;
-    string nombre;
-    string tipo;
-    string latitud;
-    string longitud;
+    string Codigo;
+    string Nombre;
+    string Latitud;
+    string Longitud;
 };
 
-struct datosDiv
-{
-    string codigoDept;
-    string codigoMun;
-    string codigoPob;
-    string nombre;
-    string tipo;
-    string latitud;
-    string longitud;
-};
-
-struct SistemaCiudades // estructura para la lista de sistema de ciudades
+struct SistemaCiudades //estructura para la lista de sistema de ciudades
 {
     string aglomeracion;
     string FuncionCiudades;

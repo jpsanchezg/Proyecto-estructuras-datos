@@ -4,8 +4,10 @@
 #include <string>
 #include <algorithm>
 #include <string>
+#include <time.h>
 #include <bits/stdc++.h>
 #include <fstream>
+#include <stdlib.h>
 #include <conio.h>
 #include <list>
 #include "funciones.h"
@@ -13,19 +15,16 @@
 
 #include <stdio.h>
 #include <windows.h>
+
+#define Char_size 256
 using namespace std;
 
-bool ExistenciaDepto(string codigo, list<datosDiv> &lista)
+bool Existencia_Departamento_Municipio(string Codigo, list<Divipola> &Lista)
 {
-
-    list<datosDiv>::iterator iter;
-    for (iter = lista.begin(); iter != lista.end(); ++iter)
+    list<Divipola>::iterator iter;
+    for (iter = Lista.begin(); iter != Lista.end(); ++iter)
     {
-        if (iter->codigoDept == codigo)
-        {
-            return true;
-        }
-        else if (iter->codigoDept == codigo)
+        if (iter->Codigo == Codigo)
         {
             return true;
         }
@@ -33,73 +32,120 @@ bool ExistenciaDepto(string codigo, list<datosDiv> &lista)
     return false;
 }
 
-bool ExistenciaMun(string codigo, list<datosDiv> &lista)
+void Contar_Municipios_Poblaciones(list<Divipola> &Departamentos, string Codigo, int indicador)
 {
+    list<Divipola>::iterator iter;
 
-    list<datosDiv>::iterator iter;
-    for (iter = lista.begin(); iter != lista.end(); ++iter)
+    int Codigo1_Auxiliar;
+    int Codigo2_Auxiliar;
+
+    for (iter = Departamentos.begin(); iter != Departamentos.end(); iter++)
     {
-        if (iter->codigoMun == codigo)
+        Codigo1_Auxiliar = atoi(Codigo.c_str());
+        if (indicador == 0)
         {
-            return true;
+            Codigo1_Auxiliar = Codigo1_Auxiliar / 1000;
         }
-        else if (iter->codigoMun == codigo)
+        else if (indicador == 1)
         {
-            return true;
+            Codigo1_Auxiliar = Codigo1_Auxiliar / 1000000;
+        }
+        Codigo2_Auxiliar = atoi(iter->Codigo.c_str());
+        if (Codigo1_Auxiliar == Codigo2_Auxiliar)
+        {
+            if (indicador == 0)
+            {
+                int Numero_Municipios = atoi(iter->Latitud.c_str());
+                Numero_Municipios += 1;
+                iter->Latitud = to_string(Numero_Municipios);
+            }
+            else if (indicador == 1)
+            {
+                int Numero_Poblaciones = atoi(iter->Longitud.c_str());
+                Numero_Poblaciones += 1;
+                iter->Longitud = to_string(Numero_Poblaciones);
+            }
         }
     }
-    return false;
 }
 
-void Cargar_divipola(list<datosDiv> &departamento, list<datosDiv> &municipio, list<DatosPob> &poblacion)
+void Cargar_divipola(list<Divipola> &Departamentos, list<Divipola> &Municipios, list<Divipola> &Poblaciones)
 {
     string linea;
     fstream fout;
     char delimitador = ',';
-    setlocale(LC_CTYPE, "Spanich");
+
     fout.open("DIVIPOLA_CentrosPoblados.csv", ios::in); // se lee el archivo .csv
-    setlocale(LC_ALL, "spanish");
-    getline(fout, linea); // se omite la primera linea del archivo que no contiene nada importante
+    getline(fout, linea);                               // se omite la primera linea del archivo que no contiene nada importante
+    setlocale(LC_CTYPE, "");
     while (getline(fout, linea))
     {
-        datosDiv nododept;
-
-        datosDiv nodomun;
-        DatosPob nodopob;
+        Divipola Auxiliar;
+        string Auxiliar_Verificacion;
 
         stringstream stream(linea); // convertir la cadena a un stream
 
-        getline(stream, nododept.codigoDept, delimitador);
+        getline(stream, Auxiliar_Verificacion, delimitador);
 
-        getline(stream, nododept.nombre, delimitador);
+        if (Existencia_Departamento_Municipio(Auxiliar_Verificacion, Departamentos) == false)
+        {
+            Divipola Departamento_Auxiliar;
+            Departamento_Auxiliar.Codigo = Auxiliar_Verificacion;
 
-        getline(stream, nodomun.codigoMun, delimitador);
+            getline(stream, Departamento_Auxiliar.Nombre, delimitador);
 
-        nododept.codigoMun = nodomun.codigoMun;
+            Departamento_Auxiliar.Longitud = "0";
 
-        getline(stream, nodomun.nombre, delimitador);
+            Departamento_Auxiliar.Latitud = "0";
 
-        getline(stream, nodopob.codigoPob, delimitador);
+            Departamentos.push_back(Departamento_Auxiliar);
+        }
+        else if (Existencia_Departamento_Municipio(Auxiliar_Verificacion, Departamentos) == true)
+        {
+            getline(stream, Auxiliar_Verificacion, delimitador);
+        }
 
-        nodomun.codigoPob = nodopob.codigoPob;
-        nodomun.codigoDept = nododept.codigoDept;
-        nodopob.codigoMun = nodomun.codigoMun;
-        getline(stream, nodopob.nombre, delimitador);
-        nododept.codigoPob = nodopob.codigoPob;
-        getline(stream, nodopob.tipo, delimitador);
+        getline(stream, Auxiliar_Verificacion, delimitador);
 
-        getline(stream, nodopob.latitud, delimitador);
-        nododept.latitud = nodopob.latitud;
-        nodomun.latitud = nodopob.latitud;
+        if (Existencia_Departamento_Municipio(Auxiliar_Verificacion, Municipios) == false)
+        {
+            Divipola Municipio_Auxiliar;
+            Municipio_Auxiliar.Codigo = Auxiliar_Verificacion;
 
-        getline(stream, nodopob.longitud, delimitador);
-        nodomun.tipo = nodopob.tipo;
-        nodopob.codigoDept = nododept.codigoDept;
-        nododept.longitud = nodopob.longitud;
-        nodomun.longitud = nodopob.longitud;
-        departamento.push_back(nododept);
-        municipio.push_back(nodomun);
-        poblacion.push_back(nodopob);
+            getline(stream, Municipio_Auxiliar.Nombre, delimitador);
+
+            getline(stream, Auxiliar_Verificacion, delimitador);
+
+            getline(stream, Auxiliar_Verificacion, delimitador);
+
+            getline(stream, Auxiliar_Verificacion, delimitador);
+
+            getline(stream, Municipio_Auxiliar.Latitud, delimitador);
+
+            getline(stream, Municipio_Auxiliar.Longitud, delimitador);
+
+            Municipios.push_back(Municipio_Auxiliar);
+
+            Contar_Municipios_Poblaciones(Departamentos, Municipio_Auxiliar.Codigo, 0);
+        }
+        else if (Existencia_Departamento_Municipio(Auxiliar_Verificacion, Municipios) == true)
+        {
+            getline(stream, Auxiliar_Verificacion, delimitador);
+
+            getline(stream, Auxiliar.Codigo, delimitador);
+
+            getline(stream, Auxiliar.Nombre, delimitador);
+
+            getline(stream, Auxiliar_Verificacion, delimitador);
+
+            getline(stream, Auxiliar.Latitud, delimitador);
+
+            getline(stream, Auxiliar.Longitud, delimitador);
+
+            Poblaciones.push_back(Auxiliar);
+
+            Contar_Municipios_Poblaciones(Departamentos, Auxiliar.Codigo, 1);
+        }
     }
     fout.close();
 }
@@ -109,7 +155,6 @@ void cargar_SC(list<SistemaCiudades> &SClista)
     string linea;
     fstream fout2;
     char delimitador = ';';
-    setlocale(LC_ALL, "spanish");
     fout2.open("Datos-ICM-2019.csv", ios::in); // se lee el archivo .csv
     setlocale(LC_ALL, "spanish");
     getline(fout2, linea); // se omite la primera linea del archivo que no contiene nada importante
@@ -140,135 +185,74 @@ void cargar_SC(list<SistemaCiudades> &SClista)
     fout2.close();
 }
 
-/*
-Funcion para mostrar la informacion del departartamento cargado en la divipola
-*/
-vector<string> Informacion(string codigodepto, list<datosDiv> departamento, list<datosDiv> municipio, list<DatosPob> poblacion)
+void Nombre_Departamento(list<Divipola> Departamentos, string Codigo_Departamento)
 {
+    list<Divipola>::iterator iter;
 
-    list<datosDiv>::iterator iter;
-    list<datosDiv>::iterator iter1;
-    list<DatosPob>::iterator iter2;
-    list<datosDiv>::iterator iter3;
-    vector<string> municipios;
-    vector<string> poblaciones;
-    vector<string> datos = {"", "", ""};
-
-    for (iter = departamento.begin(); iter != departamento.end(); ++iter)
+    for (iter = Departamentos.begin(); iter != Departamentos.end(); iter++)
     {
-        // cout << iter1->codigoIdent << endl;
-        if (iter->codigoDept == codigodepto)
+        if ((iter->Codigo) == Codigo_Departamento)
         {
-            for (iter1 = municipio.begin(); iter1 != municipio.end(); ++iter1)
-            {
-                if (iter->codigoDept == iter1->codigoDept && (find(municipios.begin(), municipios.end(), iter1->codigoMun) == municipios.end()))
-                {
-                    municipios.push_back(iter1->codigoMun);
-                    // cout << iter2->codigo << endl;
-                    // cout << iter1->codigoIdent << endl;
-                }
-            }
-            for (iter2 = poblacion.begin(); iter2 != poblacion.end(); ++iter2)
-            {
-                if (iter->codigoMun == iter2->codigoMun && (find(poblaciones.begin(), poblaciones.end(), iter2->codigoPob) == poblaciones.end()))
-                {
-                    poblaciones.push_back(iter2->codigoPob);
-                }
-            }
+            cout << endl;
+            cout << "\tEl departamento " << iter->Nombre << " esta conformado por " << iter->Latitud << " municipios y " << iter->Longitud << " centros poblados. " << endl;
+            cout << endl;
         }
     }
-    datos[0] = to_string(municipios.size());
-    datos[1] = to_string(poblaciones.size());
-
-    return datos;
 }
 
 // esta funcion despliega toda la informacion de los departamentos
-void Listar_Departamentos(list<datosDiv> departamento, list<datosDiv> municipio, list<DatosPob> poblacion)
+void Listar_Departamentos(list<Divipola> Departamentos, list<Divipola> Municipios, list<Divipola> Poblaciones)
 {
 
-    list<datosDiv>::iterator iter;
-    list<datosDiv>::iterator iter1;
-    list<DatosPob>::iterator iter2;
-    vector<string> departamentos;
-    vector<string> datos;
+    list<Divipola>::iterator iter;
 
     cout << endl;
-    cout << "    CODIGO"
-         << "        "
+    cout << "\t\tCODIGO"
+         << "\t\t"
          << "NOMBRE"
-         << "               "
+         << "\t\t"
          << "NO. MUNICIPIOS"
-         << "    "
+         << "\t\t"
          << "NO. POBLACIONES" << endl;
     cout << endl;
 
-    for (iter = departamento.begin(); iter != departamento.end(); ++iter)
+    for (iter = Departamentos.begin(); iter != Departamentos.end(); ++iter)
     {
-        if (find(departamentos.begin(), departamentos.end(), iter->codigoDept) == departamentos.end())
-        {
-            // cout << iter->codigo << endl;
-
-            datos = Informacion(iter->codigoDept, departamento, municipio, poblacion); // el lento esta aca
-            setlocale(LC_ALL, "");
-            cout << "    " << iter->codigoDept << "        " << iter->nombre << "                 " << datos[0] << "             " << datos[1] << endl;
-            departamentos.push_back(iter->codigoDept);
-        }
+        int Contador_Municipios = 0;
+        int Contador_Poblaciones = 0;
+        cout << "\t\t" << iter->Codigo << "\t\t" << iter->Nombre << "\t\t" << iter->Latitud << "\t\t" << iter->Longitud << endl;
     }
     cout << endl;
 }
 
-/*
-Esta funcion lista los municipios por el codigo del departamento
-*/
-void Listar_Municipios(string codigodepto, list<datosDiv> municipios)
+void Listar_Municipios_Poblaciones(string Codigo, list<Divipola> Lista)
 {
 
-    list<datosDiv>::iterator iter;
-    list<datosDiv>::iterator iter2;
-    list<DatosPob>::iterator iterG;
-    cout << endl;
-    cout << "    CODIGO"
-         << "    "
-         << "NOMBRE" << endl;
-    cout << endl;
+    list<Divipola>::iterator iter;
 
-    for (iter2 = municipios.begin(); iter2 != municipios.end(); ++iter2)
-    {
-        if (iter2->codigoDept == codigodepto && iter2->tipo == "CM")
-        {
-            cout << "    " << iter2->codigoMun << "    " << iter2->nombre << endl;
-        }
-    }
-}
+    int Codigo1_Auxiliar;
+    int Codigo2_Auxiliar;
 
-/*
-Funcion para listar las poblaciones por el codigo del municipio
-*/
-void Listar_Poblaciones(string codigoMunicipio, list<DatosPob> poblacion)
-{
-    list<DatosPob>::iterator iter2;
     cout << endl;
-    cout << "\tCODIGO"
-         << "\t\t"
+    cout << "\t\tCODIGO"
+         << "\t\t "
          << "NOMBRE"
-         << "\t\t\t\t"
+         << "\t\t"
          << "LATITUD"
-         << "\t\t\t\t"
+         << "\t\t"
          << "LONGITUD" << endl;
     cout << endl;
 
-    for (iter2 = poblacion.begin(); iter2 != poblacion.end(); ++iter2)
+    for (iter = Lista.begin(); iter != Lista.end(); ++iter)
     {
-        if (iter2->codigoMun == codigoMunicipio)
+        Codigo1_Auxiliar = atoi(iter->Codigo.c_str());
+        Codigo1_Auxiliar = Codigo1_Auxiliar / 1000;
+        Codigo2_Auxiliar = atoi(Codigo.c_str());
+        if (Codigo1_Auxiliar == Codigo2_Auxiliar)
         {
-            if (iter2->tipo == "CP")
-            {
-                cout << '\t' << iter2->codigoPob << '\t' << iter2->nombre << "\t\t\t" << iter2->latitud << "\t\t" << iter2->longitud << endl;
-            }
+            cout << "\t\t" << iter->Codigo << "\t\t" << iter->Nombre << "\t\t" << iter->Latitud << "\t\t" << iter->Longitud << endl;
         }
     }
-
     cout << endl;
 }
 
@@ -276,7 +260,7 @@ void Listar_Poblaciones(string codigoMunicipio, list<DatosPob> poblacion)
 funcion para determinar si un municipio esta en el sistema de ciudades usando la divipola para poder
 idnetificar a los municipios en la divipola y en el sistema de ciudades
 */
-void estaEnSistema(string codigoMunicipio, list<SistemaCiudades> SClista, list<datosDiv> municipio)
+void estaEnSistema(string codigoMunicipio, list<SistemaCiudades> SClista, list<Divipola> Municipios)
 {
 
     bool encontroSCMU = false;
@@ -288,15 +272,15 @@ void estaEnSistema(string codigoMunicipio, list<SistemaCiudades> SClista, list<d
     }
     if (!SClista.empty())
     {
-        list<datosDiv>::iterator iter;
+        list<Divipola>::iterator iter;
         list<SistemaCiudades>::iterator otr;
-        for (iter = municipio.begin(); iter != municipio.end(); ++iter)
+        for (iter = Municipios.begin(); iter != Municipios.end(); ++iter)
         {
-            if (iter->codigoMun == codigoMunicipio)
+            if (iter->Codigo == codigoMunicipio)
             {
                 for (otr = SClista.begin(); otr != SClista.end(); otr++)
                 {
-                    if (otr->divipola == iter->codigoMun)
+                    if (otr->divipola == iter->Codigo)
                     {
                         encontroSCMU = true;
                     }
@@ -324,107 +308,172 @@ void ayuda(string menuayuda, bool &comandoEncontrado)
 {
     if (menuayuda == "carga_divipola")
     {
-        cout << "carga_divipola DIVIPOLA_CentrosPoblados.csv           " << '\t' << "Carga en una o mas estructuras de datos en memoria el contenido del archivo identificado por nombre_archivo." << endl;
+        cout << "CARGA_DIVIPOLA nombre_archivo.csv    " << '\t' << "Carga en una o mas estructuras de datos en memoria el contenido del "
+             << "                                                    archivo identificado por nombre_archivo." << endl;
         comandoEncontrado = true;
     }
     cout << endl;
     if (menuayuda == "listar_departamentos")
     {
-        cout << "listar_departamentos                    " << '\t' << "Imprime en n lineas (una para cada departamento) la informacion basica del departamento que se cargo de la Divipola." << endl;
+        cout << "LISTAR_DEPARTAMENTOS   " << '\t' << "Imprime en n lineas (una para cada departamento) la informacion basica del departamento"
+             << "                                 que se cargo de la Divipola." << endl;
         comandoEncontrado = true;
     }
     if (menuayuda == "listar_municipios")
     {
-        cout << "LISTAR_MUNICIPIOS codigo_depto          " << '\t' << "Imprime en n lineas (una para cada municipio) la informacion basica del departamento que se cargo de la Divipola." << endl;
+        cout << "LISTAR_MUNICIPIOS codigo_depto   " << '\t' << "Imprime en n lineas (una para cada municipio) la informacion basica del "
+             << "                                                departamento que se cargo de la Divipola." << endl;
         comandoEncontrado = true;
     }
     if (menuayuda == "listar_poblaciones")
     {
-        cout << "LISTAR_POBLACIONES codigo_municipio     " << '\t' << "Imprime en n lineas (una para cada municipio) la informacion basica del departamento que se cargo de la Divipola." << endl;
+        cout << "LISTAR_POBLACIONES codigo_municipio    " << '\t' << "Imprime en n lineas (una para cada municipio) la informacion basica "
+             << "                                                     del departamento que se cargo de la Divipola." << endl;
         comandoEncontrado = true;
     }
     if (menuayuda == "info_sumaria")
     {
-        cout << "INFO_SUMARIA codigo_depto               " << '\t' << "Imprime en una lineas la informacion basica del nombre del departamento que corresponde al codigo dado como parametro junto con la cantidad de municipios y centros poblados que lo conforman" << endl;
+        cout << "INFO_SUMARIA codigo_depto   " << '\t' << "Imprime en una lineas la informacion basica del nombre del departamento que "
+             << "                                            corresponde al codigo dado como parametro junto con la cantidad de municipios y "
+             << "                                        centros poblados que lo conforman" << endl;
         comandoEncontrado = true;
     }
     if (menuayuda == "carga_SC")
     {
-        cout << "CARGA_SC nombre_archivo                 " << '\t' << "Carga en una o mas estructuras de datos en memoria el contenido del archivo identificado por nombre_archivo con la "
-             << "\n"
-             << "informacion basica para representar el sistema de ciudades." << endl;
+        cout << "CARGA_SC nombre_archivo    " << '\t' << "Carga en una o mas estructuras de datos en memoria el contenido del archivo "
+             << "                                            identificado por nombre_archivo con la informacion basica para representar el "
+             << "                                          sistema de ciudades." << endl;
         comandoEncontrado = true;
     }
     if (menuayuda == "esta_en_sistema")
     {
-        cout << "ESTA_EN_SISTEMA codigo_municipio        " << '\t' << "Determina si un municipio, con codigo dado por el usuario, existe dentro de las municipios definidos en el Sistema de Ciudades y cargados desde el archivo correspondiente." << endl;
+        cout << "ESTA_EN_SISTEMA codigo_municipio   " << '\t' << "Determina si un municipio, con codigo dado por el usuario, existe "
+             << "                                                      dentro de las municipios definidos en el Sistema de Ciudades y cargados "
+             << "                                                desde el archivo correspondiente." << endl;
         comandoEncontrado = true;
     }
     if (menuayuda == "aglomeracion")
     {
-        cout << "AGLOMERACION                            " << '\t' << "El comando debe crear los componentes C2, aglomeraciones urbanas, como componentes del sistema de Ciudades, de acuerdo con los datos guardados en memoria" << endl;
+        cout << "AGLOMERACION   " << '\t' << "El comando debe crear los componentes C2, aglomeraciones urbanas, como componentes del "
+             << "                                 sistema de Ciudades, de acuerdo con los datos guardados en memoria" << endl;
         comandoEncontrado = true;
     }
     if (menuayuda == "uninodal")
     {
-        cout << "UNINODAL                                " << '\t' << "El comando debe crear los componentes C1, ciudades uninodales, como componentes del sistema de Ciudades, de acuerdo con los datos guardados en memoria" << endl;
+        cout << "UNINODAL   " << '\t' << "El comando debe crear los componentes C1, ciudades uninodales, como componentes del sistema "
+             << "                            de Ciudades, de acuerdo con los datos guardados en memoria" << endl;
         comandoEncontrado = true;
     }
     if (menuayuda == "capital_menor")
     {
-        cout << "CAPITAL_MENOR                           " << '\t' << "El comando debe crear los componentes C3, ciudades capitales menores de cien mil habitantes, como componentes del sistema de Ciudades, de acuerdo con los datos guardados en memoria" << endl;
+        cout << "CAPITAL_MENOR  " << '\t' << "El comando debe crear los componentes C3, ciudades capitales menores de cien mil habitantes,"
+             << "                            como componentes del sistema de Ciudades, de acuerdo con los datos guardados en memoria" << endl;
         comandoEncontrado = true;
     }
     if (menuayuda == "reporte")
     {
-        cout << "REPORTE                                 " << '\t' << "El comando debe crear un reporte con los datos del sistema" << endl;
+        cout << "REPORTE    " << '\t' << "El comando debe crear un reporte con los datos del sistema" << endl;
         comandoEncontrado = true;
     }
     if (menuayuda == "codificar")
     {
-        cout << "CODIFICAR nombre_archivo.icmbin     " << '\t' << "El comando debe cargar en memoria la informaci�n completa del �ndice de Ciudades Modernas (ICM) y generar el archivo binario con la correspondiente codificaci�n de Huffman con toda la informaci�n que lo compone, almacen�ndolo en disco bajo el nombre: nombre_archivo.icmbin" << endl;
+        cout << "CODIFICAR nombre_archivo.icmbin    " << '\t' << "El comando debe cargar en memoria la informaci�n completa del �ndice "
+             << "                                                   de Ciudades Modernas (ICM) y generar el archivo binario con la correspondiente "
+             << "                                         codificaci�n de Huffman con toda la informaci�n que lo compone, almacen�ndolo "
+             << "                                          en disco bajo el nombre: nombre_archivo.icmbin" << endl;
         comandoEncontrado = true;
     }
     if (menuayuda == "decodificar")
     {
-        cout << "DECODIFICAR nombre_archivo.icmbin   " << '\t' << "El comando debe cargar en memoria los datos contenidas en el archivo binario nombre_archivo.icmbin , que contiene una codificaci�n Huffman de toda la informaci�n que compone el �ndice de Ciudades Modernas y debe mostrarlo decodificado en pantalla" << endl;
+        cout << "DECODIFICAR nombre_archivo.icmbin   " << '\t' << "El comando debe cargar en memoria los datos contenidas en el archivo "
+             << "                                                   binario nombre_archivo.icmbin , que contiene una codificaci�n Huffman de "
+             << "                                               toda la informaci�n que compone el �ndice de Ciudades Modernas y debe "
+             << "                                                  mostrarlo decodificado en pantalla" << endl;
+        comandoEncontrado = true;
+    }
+    if (menuayuda == "salir")
+    {
+        cout << "SALIR  " << '\t' << "El comando permite finalizar la ejecuci�n del programa" << endl;
         comandoEncontrado = true;
     }
     if (menuayuda == "general")
     {
-        cout << "Lista de todos los comandos:" << endl;
         cout << endl;
+        cout << "carga_divipola DIVIPOLA_CentrosPoblados.csv    " << '\t' << "Carga en una o mas estructuras de datos en memoria el contenido del "
+             << "                                                    archivo identificado por nombre_archivo." << endl;
         cout << endl;
-        cout << "carga_divipola DIVIPOLA_CentrosPoblados.csv           " << '\t' << "Carga en una o mas estructuras de datos en memoria el contenido del archivo identificado por nombre_archivo." << endl;
+        cout << "listar_departamentos                           " << '\t' << "Imprime en n lineas (una para cada departamento) la informacion basica "
+             << "                                                 del departamento que se cargo de la Divipola." << endl;
         cout << endl;
-        cout << "listar_departamentos                    " << '\t' << "Imprime en n lineas (una para cada departamento) la informacion basica del departamento que se cargo de la Divipola." << endl;
+        cout << "LISTAR_MUNICIPIOS codigo_depto                 " << '\t' << "Imprime en n lineas (una para cada municipio) la informacion basica "
+             << "                                                    del departamento que se cargo de la Divipola." << endl;
         cout << endl;
-        cout << "LISTAR_MUNICIPIOS codigo_depto          " << '\t' << "Imprime en n lineas (una para cada municipio) la informacion basica del departamento que se cargo de la Divipola." << endl;
+        cout << "LISTAR_POBLACIONES codigo_municipio            " << '\t' << "Imprime en n lineas (una para cada municipio) la informacion basica "
+             << "                                                    del departamento que se cargo de la Divipola." << endl;
         cout << endl;
-        cout << "LISTAR_POBLACIONES codigo_municipio     " << '\t' << "Imprime en n lineas (una para cada municipio) la informacion basica del departamento que se cargo de la Divipola." << endl;
+        cout << "INFO_SUMARIA codigo_depto                      " << '\t' << "Imprime en una lineas la informacion basica del nombre del          "
+             << "                                                    departamento que corresponde al codigo dado como parametro junto con la"
+             << "                                                 cantidad de municipios y centros poblados que lo conforman." << endl;
         cout << endl;
-        cout << "INFO_SUMARIA codigo_depto               " << '\t' << "Imprime en una lineas la informacion basica del nombre del departamento que corresponde al codigo dado como parametro junto con la cantidad de municipios y centros poblados que lo conforman" << endl;
+        cout << "CARGA_SC nombre_archivo                        " << '\t' << "Carga en una o mas estructuras de datos en memoria el contenido del "
+             << "                                                    archivo identificado por nombre_archivo con la informacion basica para "
+             << "                                                 representar el sistema de ciudades." << endl;
         cout << endl;
-        cout << "CARGA_SC nombre_archivo                 " << '\t' << "Carga en una o mas estructuras de datos en memoria el contenido del archivo identificado por nombre_archivo con la "
-             << "\n"
-             << '\t'
-             << "informacion basica para representar el sistema de ciudades." << endl;
+        cout << "ESTA_EN_SISTEMA codigo_municipio               " << '\t' << "Determina si un municipio, con codigo dado por el usuario, existe   "
+             << "                                                    dentro de las municipios definidos en el Sistema de Ciudades y cargados"
+             << "                                                 desde el archivo correspondiente." << endl;
         cout << endl;
-        cout << "ESTA_EN_SISTEMA codigo_municipio        " << '\t' << "Determina si un municipio, con codigo dado por el usuario, existe dentro de las municipios definidos en el Sistema de Ciudades y cargados desde el archivo correspondiente." << endl;
+        cout << "AGLOMERACION                                   " << '\t' << "El comando debe crear los componentes C2, aglomeraciones urbanas,   "
+             << "                                                    como componentes del sistema de Ciudades, de acuerdo con los datos     "
+             << "                                                 guardados en memoria." << endl;
         cout << endl;
-        cout << "AGLOMERACION                            " << '\t' << "El comando debe crear los componentes C2, aglomeraciones urbanas, como componentes del sistema de Ciudades, de acuerdo con los datos guardados en memoria" << endl;
+        cout << "UNINODAL                                       " << '\t' << "El comando debe crear los componentes C1, ciudades uninodales, como "
+             << "                                                    componentes del sistema de Ciudades, de acuerdo con los datos guardados"
+             << "                                                 en memoria." << endl;
         cout << endl;
-        cout << "UNINODAL                                " << '\t' << "El comando debe crear los componentes C1, ciudades uninodales, como componentes del sistema de Ciudades, de acuerdo con los datos guardados en memoria" << endl;
+        cout << "CAPITAL_MENOR                                  " << '\t' << "El comando debe crear los componentes C3, ciudades capitales menores"
+             << "                                                    de cien mil habitantes, como componentes del sistema de Ciudades, de   "
+             << "                                                 acuerdo con los datos guardados en memoria." << endl;
         cout << endl;
-        cout << "CAPITAL_MENOR                           " << '\t' << "El comando debe crear los componentes C3, ciudades capitales menores de cien mil habitantes, como componentes del sistema de Ciudades, de acuerdo con los datos guardados en memoria" << endl;
+        cout << "REPORTE                                        " << '\t' << "El comando debe crear un reporte con los datos del sistema." << endl;
         cout << endl;
-        cout << "REPORTE                                 " << '\t' << "El comando debe crear un reporte con los datos del sistema" << endl;
+        cout << "CODIFICAR nombre_archivo.icmbin                " << '\t' << "El comando debe cargar en memoria la informaci�n completa del �ndice"
+             << "                                                    de Ciudades Modernas (ICM) y generar el archivo binario con la        "
+             << "                                                  correspondiente codificaci�n de Huffman con toda la informaci�n"
+             << "                                                         que lo compone, almacen�ndolo en disco bajo el nombre: "
+             << "                                                                 nombre_archivo.icmbin" << endl;
         cout << endl;
-        cout << "CODIFICAR nombre_archivo.icmbin         " << '\t' << "El comando debe cargar en memoria la informaci�n completa del �ndice de Ciudades Modernas (ICM) y generar el archivo binario con la correspondiente codificaci�n de Huffman con toda la informaci�n que lo compone, almacen�ndolo en disco bajo el nombre: nombre_archivo.icmbin" << endl;
+        cout << "DECODIFICAR nombre_archivo.icmbin              " << '\t' << "El comando debe cargar en memoria los datos contenidas en el archivo"
+             << "                                                    binario nombre_archivo.icmbin , que contiene una codificaci�n Huffman "
+             << "                                                  de toda la informaci�n que compone el �ndice de Ciudades Modernas"
+             << "                                                       y debe mostrarlo decodificado en pantalla" << endl;
         cout << endl;
-        cout << "DECODIFICAR nombre_archivo.icmbin       " << '\t' << "El comando debe cargar en memoria los datos contenidas en el archivo binario nombre_archivo.icmbin , que contiene una codificaci�n Huffman de toda la informaci�n que compone el �ndice de Ciudades Modernas y debe mostrarlo decodificado en pantalla" << endl;
-        cout << endl;
-        cout << "SALIR                                           Termina la ejecucion de la aplicacion." << endl;
+        cout << "SALIR                                          " << '\t' << "Termina la ejecucion de la aplicacion." << endl;
+        comandoEncontrado = true;
+    }
+    cout << endl;
+}
+
+/*
+Funcion del capitales menores  que debe sacar la lista de ciudades con la poblacion menor a 100.000
+*/
+
+void capitalesmenores(list<SistemaCiudades> SClista, list<ciudadescapitales> &CiuCap)
+{
+    list<SistemaCiudades>::iterator iter;
+    ciudadescapitales nodoCC;
+    int poblacion = 0;
+    for (iter = SClista.begin(); iter != SClista.end(); ++iter)
+    {
+        poblacion = stoi(iter->personas);
+        if (poblacion < 100000 && iter->FuncionCiudades != "Fuera SC")
+        {
+            nodoCC.funcionCiudades = iter->FuncionCiudades;
+            nodoCC.cod_dept = iter->cod_dept;
+            nodoCC.nom_mpio = iter->nom_mpio;
+            nodoCC.divipola = iter->divipola;
+            CiuCap.push_back(nodoCC);
+        }
     }
 }
 
@@ -498,8 +547,9 @@ void Crear_Aglomeraciones(list<SistemaCiudades> SClista, list<Aglomeracion> &Agl
             Contador_Ciudades += 1;
         }
     }
-
-    cout << "\n Se crearon " << Contador_Aglomeraciones << " aglomeraciones urbanas, compuestas por " << Contador_Ciudades << " municipios" << endl;
+    cout << endl;
+    cout << "\tSe crearon " << Contador_Aglomeraciones << " aglomeraciones urbanas, compuestas por " << Contador_Ciudades << " municipios" << endl;
+    cout << endl;
 }
 
 void Crear_Uninodales(list<SistemaCiudades> SClista, list<Municipios_Ciudades> &Ciudades_Uninodales)
@@ -517,29 +567,6 @@ void Crear_Uninodales(list<SistemaCiudades> SClista, list<Municipios_Ciudades> &
             Auxiliar.Personas = iter->personas;
             Auxiliar.Hectareas = iter->hectareas;
             Ciudades_Uninodales.push_back(Auxiliar);
-        }
-    }
-}
-
-/*
-Funcion del capitales menores  que debe sacar la lista de ciudades con la poblacion menor a 100.000
-*/
-
-void capitalesmenores(list<SistemaCiudades> SClista, list<ciudadescapitales> &CiuCap)
-{
-    list<SistemaCiudades>::iterator iter;
-    ciudadescapitales nodoCC;
-    int poblacion = 0;
-    for (iter = SClista.begin(); iter != SClista.end(); ++iter)
-    {
-        poblacion = stoi(iter->personas);
-        if (poblacion <= 100000)
-        {
-            nodoCC.funcionCiudades = iter->FuncionCiudades;
-            nodoCC.cod_dept = iter->cod_dept;
-            nodoCC.nom_mpio = iter->nom_mpio;
-            nodoCC.divipola = iter->divipola;
-            CiuCap.push_back(nodoCC);
         }
     }
 }
@@ -830,8 +857,305 @@ void reporte(list<SistemaCiudades> SClista)
          << "\t" << totalMunCME << "\t\t" << totPobCME << endl;
     cout << "\t\t Total sistema de ciudades (" << totalSC << ")"
          << "\t\t\t\t" << totalMuni << "\t\t" << totPobMun << endl;
-    cout << "\t\t % con respecto a colombia (" << totalMuni << ")"
+    cout << "\t\t % con respecto a colombia (" << totalCol << ")"
          << "\t\t\t" << probatot << "\t\t" << probapob << endl;
     cout << "\t\t Total colombia "
          << "\t\t\t\t\t" << totalCol << "\t\t" << totalpob << endl;
+}
+
+// Estructura del arbol de Huffman
+struct nodo
+{
+    unsigned char caracter;
+    long long int Frecuencia;
+    nodo *izquierda;
+    nodo *derecha;
+    nodo(unsigned char c, long long int f, nodo *l = NULL, nodo *r = NULL)
+    {
+        caracter = c;
+        Frecuencia = f;
+        izquierda = l;
+        derecha = r;
+    }
+};
+// Esta funcion se encarga de comparar el nodo recien insertado con otros dos (serian sus hijos) para asi poder escoger el mas pequeño e intercambiarlo
+void Minimo_monticulo(vector<nodo *> &A, int i, int length)
+{
+    int menor = i;
+    if (2 * i + 1 <= length && A[2 * i + 1]->Frecuencia < A[i]->Frecuencia)
+    {
+        menor = 2 * i + 1;
+        if (2 * i + 2 <= length && A[2 * i + 2]->Frecuencia < A[2 * i + 1]->Frecuencia)
+            menor = 2 * i + 2;
+    }
+    else if (2 * i + 2 <= length && A[2 * i + 2]->Frecuencia < A[i]->Frecuencia)
+        menor = 2 * i + 2;
+    if (menor != i)
+    {
+        swap(A[i], A[menor]);
+        Minimo_monticulo(A, menor, length);
+    }
+}
+// Extrear el minimo del monticulo
+nodo *Extraer_menor(vector<nodo *> &A)
+{
+    if (A.size() < 1)
+        return NULL;
+    nodo *minimo = A[0];
+    A[0] = A.back();
+    A.pop_back();
+    Minimo_monticulo(A, 0, A.size() - 1);
+    return minimo;
+}
+// Esta funcion inserta el caracter en el monticulo
+void Insertar_min_mon(vector<nodo *> &A, nodo *elemento)
+{
+    A.push_back(elemento);
+    int i = A.size() - 1;
+    while (i > 0 && A[(i - 1) / 2]->Frecuencia > A[i]->Frecuencia)
+    {
+        swap(A[i], A[(i - 1) / 2]);
+        i = (i - 1) / 2;
+    }
+}
+// con esta funcion se construye el monticulo
+void Crear_monticulo(vector<nodo *> &A, int length)
+{
+    for (int i = (length - 1) / 2; i >= 0; i--)
+    {
+        Minimo_monticulo(A, i, length);
+    }
+}
+// Esta funcion se encarga de almacenar cada caracter en el vector
+void Guardar_car(nodo *raiz, char cod_simple[], int index, vector<long long int> &mapaHuffman)
+{
+    if (raiz->izquierda)
+    {
+        cod_simple[index] = '0';
+        Guardar_car(raiz->izquierda, cod_simple, index + 1, mapaHuffman);
+    }
+    if (raiz->derecha)
+    {
+        cod_simple[index] = '1';
+        Guardar_car(raiz->derecha, cod_simple, index + 1, mapaHuffman);
+    }
+    if (!raiz->izquierda && !raiz->izquierda)
+    {
+        for (int i = index; i >= 0; i--)
+        {
+            if (i != index)
+            {
+                mapaHuffman[raiz->caracter] *= 10;
+                mapaHuffman[raiz->caracter] += cod_simple[i] - '0';
+            }
+            else
+                mapaHuffman[raiz->caracter] = 1;
+        }
+    }
+}
+// Esta funcion se encarga de almacenar el arbol al archivo
+void Guardar_Arbol(ofstream &input, nodo *raiz)
+{
+    if (!raiz->izquierda && !raiz->derecha)
+    {
+        input << '1';
+        input << raiz->caracter;
+    }
+    else
+    {
+        input << '0';
+        Guardar_Arbol(input, raiz->izquierda);
+        Guardar_Arbol(input, raiz->derecha);
+    }
+}
+// En esta funcion se desarrolla el algoritmo de Huffman
+nodo *Huffman(long long int Contador[])
+{
+    vector<nodo *> monticulo;
+    for (int i = 0; i < Char_size; i++)
+        if (Contador[i] != 0)
+            monticulo.push_back(new nodo(i, Contador[i]));
+    Crear_monticulo(monticulo, monticulo.size() - 1);
+    while (monticulo.size() != 1)
+    {
+        nodo *Z = new nodo(-1, 0, Extraer_menor(monticulo), Extraer_menor(monticulo));
+        Z->Frecuencia = Z->izquierda->Frecuencia + Z->derecha->Frecuencia;
+        Insertar_min_mon(monticulo, Z);
+    }
+    return (monticulo[0]);
+}
+// Con esta funcion se utiliza para poder volver a escribir en un archivo per ya comprimido
+void Escrbir_codif(ifstream &input, ofstream &output, vector<long long int> &mapaHuffman)
+{
+    char da;
+    unsigned char bits;
+    long long int contador = 0;
+    while (input.get(da))
+    {
+        long long int temp = mapaHuffman[static_cast<unsigned char>(da)];
+        while (temp != 1)
+        {
+            bits <<= 1;
+            if ((temp % 10) != 0)
+                bits |= 1;
+            temp /= 10;
+            contador++;
+            if (contador == 8)
+            {
+                output << bits;
+                contador = bits = 0;
+            }
+        }
+    }
+    while (contador != 8)
+    {
+        bits <<= 1;
+        contador++;
+    }
+    output << bits;
+    output.close();
+}
+
+int codificar()
+{
+    vector<long long int> mapaHuffman;
+    mapaHuffman.resize(Char_size);
+    int error = 0;
+    long long int Contador[Char_size] = {0};
+    ifstream input_file("Datos-ICM-2019.csv", ios::binary);
+    if (!input_file.good())
+    {
+        perror("Error con el codigo\t");
+        error = 1;
+    }
+    char da;
+    while (input_file.get(da))
+        Contador[static_cast<unsigned char>(da)]++;
+    input_file.clear();
+    input_file.seekg(0);
+    nodo *arbol = Huffman(Contador);
+    ofstream output_file("codificado.icmbin", ios::binary);
+    if (!output_file.good())
+    {
+        perror("Error con el codigo\t");
+        error = 2;
+    }
+    output_file << arbol->Frecuencia;
+    output_file << ',';
+    Guardar_Arbol(output_file, arbol);
+    output_file << ' ';
+    char cod_simple[16];
+    Guardar_car(arbol, cod_simple, 0, mapaHuffman);
+    Escrbir_codif(input_file, output_file, mapaHuffman);
+    input_file.close();
+    output_file.close();
+    return error;
+}
+
+// Estructura del nodo del arbol de Huffman para poder decodificar
+struct Nodo
+{
+    unsigned char dato;
+    Nodo *izq;
+    Nodo *der;
+    Nodo(char c, Nodo *l = NULL, Nodo *r = NULL)
+    {
+        dato = c;
+        izq = l;
+        der = r;
+    }
+};
+// Crear el arbol de Huffman utilizando el archivo comprimido
+Nodo *CrearArbol(ifstream &input)
+{
+    char da;
+    input.get(da);
+    if (da == '1')
+    {
+        input.get(da);
+        return (new Nodo(da));
+    }
+    else
+    {
+        Nodo *izq = CrearArbol(input);
+        Nodo *der = CrearArbol(input);
+        return (new Nodo(-1, izq, der));
+    }
+}
+// Se hace uso de esta funcion para poder decodificar cada item binario de acuerdo al arbol creado
+void decodificar(ifstream &input, string Nom_archivo, Nodo *raiz, long long int Frecuencia_total)
+{
+    ofstream output((Nom_archivo.erase(Nom_archivo.size() - 4)).c_str(), ios::binary);
+    if (!output.good())
+    {
+        perror("Error:\t");
+        // exit(-1);
+    }
+    bool eof_flag = false;
+    char bits;
+    Nodo *puntero = raiz;
+    while (input.get(bits))
+    {
+        int contador = 7;
+        while (contador >= 0)
+        {
+            if (!puntero->izq && !puntero->der)
+            {
+                output << puntero->dato;
+                Frecuencia_total--;
+                if (!Frecuencia_total)
+                {
+                    eof_flag = true;
+                    break;
+                }
+                puntero = raiz;
+                continue;
+            }
+            if ((bits & (1 << contador)))
+            {
+                puntero = puntero->der;
+                contador--;
+            }
+            else
+            {
+                puntero = puntero->izq;
+                contador--;
+            }
+        }
+        if (eof_flag)
+            break;
+    }
+    output.close();
+}
+
+int decodificar()
+{
+    string Nom_archivo = "codificado.icmbin";
+    int error = 0;
+    ifstream abrir_archivo(Nom_archivo.c_str(), ios::binary);
+    if (!abrir_archivo.good())
+    {
+
+        perror("Error con el archivo\t");
+        error = 1;
+    }
+    if (Nom_archivo.find(".icmbin") == string::npos)
+    {
+        cout << "Error: El archivo ya esta descomprimido\n\n";
+        error = 2;
+    }
+    long long int Frecuencia_total = 0;
+    char da;
+    while (abrir_archivo.get(da))
+    {
+        if (da == ',')
+            break;
+        Frecuencia_total *= 10;
+        Frecuencia_total += da - '0';
+    }
+    Nodo *Arbol_Huffman = CrearArbol(abrir_archivo);
+    abrir_archivo.get(da);
+    decodificar(abrir_archivo, Nom_archivo, Arbol_Huffman, Frecuencia_total);
+    abrir_archivo.close();
+    return error;
 }
