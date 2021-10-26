@@ -17,6 +17,9 @@ aglomeracion
 uninodal
 capital_menor
 reporte
+codificar_archivoicm.bin
+decodificar_archivoicm.bin
+decodificar_archivoicm.bin
 
 
 

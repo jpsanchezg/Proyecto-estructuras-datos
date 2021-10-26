@@ -31,4 +31,8 @@ void Crear_Aglomeraciones(list<SistemaCiudades> SClista, list<Aglomeracion> &Agl
 
 void Crear_Uninodales(list<SistemaCiudades> SClista, list<Municipios_Ciudades> &Ciudades_Uninodales);
 
+int codificar();
+
+int decodificar();
+
 #endif

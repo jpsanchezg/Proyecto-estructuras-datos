@@ -4,8 +4,10 @@
 #include <string>
 #include <algorithm>
 #include <string>
+#include <time.h>
 #include <bits/stdc++.h>
 #include <fstream>
+#include <stdlib.h>
 #include <conio.h>
 #include <list>
 #include "funciones.h"
@@ -13,6 +15,8 @@
 
 #include <stdio.h>
 #include <windows.h>
+
+#define Char_size 256
 using namespace std;
 
 bool Existencia_Departamento_Municipio(string Codigo, list<Divipola> &Lista)
@@ -857,4 +861,301 @@ void reporte(list<SistemaCiudades> SClista)
          << "\t\t\t" << probatot << "\t\t" << probapob << endl;
     cout << "\t\t Total colombia "
          << "\t\t\t\t\t" << totalCol << "\t\t" << totalpob << endl;
+}
+
+// Estructura del arbol de Huffman
+struct nodo
+{
+    unsigned char caracter;
+    long long int Frecuencia;
+    nodo *izquierda;
+    nodo *derecha;
+    nodo(unsigned char c, long long int f, nodo *l = NULL, nodo *r = NULL)
+    {
+        caracter = c;
+        Frecuencia = f;
+        izquierda = l;
+        derecha = r;
+    }
+};
+// Esta funcion se encarga de comparar el nodo recien insertado con otros dos (serian sus hijos) para asi poder escoger el mas pequeño e intercambiarlo
+void Minimo_monticulo(vector<nodo *> &A, int i, int length)
+{
+    int menor = i;
+    if (2 * i + 1 <= length && A[2 * i + 1]->Frecuencia < A[i]->Frecuencia)
+    {
+        menor = 2 * i + 1;
+        if (2 * i + 2 <= length && A[2 * i + 2]->Frecuencia < A[2 * i + 1]->Frecuencia)
+            menor = 2 * i + 2;
+    }
+    else if (2 * i + 2 <= length && A[2 * i + 2]->Frecuencia < A[i]->Frecuencia)
+        menor = 2 * i + 2;
+    if (menor != i)
+    {
+        swap(A[i], A[menor]);
+        Minimo_monticulo(A, menor, length);
+    }
+}
+// Extrear el minimo del monticulo
+nodo *Extraer_menor(vector<nodo *> &A)
+{
+    if (A.size() < 1)
+        return NULL;
+    nodo *minimo = A[0];
+    A[0] = A.back();
+    A.pop_back();
+    Minimo_monticulo(A, 0, A.size() - 1);
+    return minimo;
+}
+// Esta funcion inserta el caracter en el monticulo
+void Insertar_min_mon(vector<nodo *> &A, nodo *elemento)
+{
+    A.push_back(elemento);
+    int i = A.size() - 1;
+    while (i > 0 && A[(i - 1) / 2]->Frecuencia > A[i]->Frecuencia)
+    {
+        swap(A[i], A[(i - 1) / 2]);
+        i = (i - 1) / 2;
+    }
+}
+// con esta funcion se construye el monticulo
+void Crear_monticulo(vector<nodo *> &A, int length)
+{
+    for (int i = (length - 1) / 2; i >= 0; i--)
+    {
+        Minimo_monticulo(A, i, length);
+    }
+}
+// Esta funcion se encarga de almacenar cada caracter en el vector
+void Guardar_car(nodo *raiz, char cod_simple[], int index, vector<long long int> &mapaHuffman)
+{
+    if (raiz->izquierda)
+    {
+        cod_simple[index] = '0';
+        Guardar_car(raiz->izquierda, cod_simple, index + 1, mapaHuffman);
+    }
+    if (raiz->derecha)
+    {
+        cod_simple[index] = '1';
+        Guardar_car(raiz->derecha, cod_simple, index + 1, mapaHuffman);
+    }
+    if (!raiz->izquierda && !raiz->izquierda)
+    {
+        for (int i = index; i >= 0; i--)
+        {
+            if (i != index)
+            {
+                mapaHuffman[raiz->caracter] *= 10;
+                mapaHuffman[raiz->caracter] += cod_simple[i] - '0';
+            }
+            else
+                mapaHuffman[raiz->caracter] = 1;
+        }
+    }
+}
+// Esta funcion se encarga de almacenar el arbol al archivo
+void Guardar_Arbol(ofstream &input, nodo *raiz)
+{
+    if (!raiz->izquierda && !raiz->derecha)
+    {
+        input << '1';
+        input << raiz->caracter;
+    }
+    else
+    {
+        input << '0';
+        Guardar_Arbol(input, raiz->izquierda);
+        Guardar_Arbol(input, raiz->derecha);
+    }
+}
+// En esta funcion se desarrolla el algoritmo de Huffman
+nodo *Huffman(long long int Contador[])
+{
+    vector<nodo *> monticulo;
+    for (int i = 0; i < Char_size; i++)
+        if (Contador[i] != 0)
+            monticulo.push_back(new nodo(i, Contador[i]));
+    Crear_monticulo(monticulo, monticulo.size() - 1);
+    while (monticulo.size() != 1)
+    {
+        nodo *Z = new nodo(-1, 0, Extraer_menor(monticulo), Extraer_menor(monticulo));
+        Z->Frecuencia = Z->izquierda->Frecuencia + Z->derecha->Frecuencia;
+        Insertar_min_mon(monticulo, Z);
+    }
+    return (monticulo[0]);
+}
+// Con esta funcion se utiliza para poder volver a escribir en un archivo per ya comprimido
+void Escrbir_codif(ifstream &input, ofstream &output, vector<long long int> &mapaHuffman)
+{
+    char da;
+    unsigned char bits;
+    long long int contador = 0;
+    while (input.get(da))
+    {
+        long long int temp = mapaHuffman[static_cast<unsigned char>(da)];
+        while (temp != 1)
+        {
+            bits <<= 1;
+            if ((temp % 10) != 0)
+                bits |= 1;
+            temp /= 10;
+            contador++;
+            if (contador == 8)
+            {
+                output << bits;
+                contador = bits = 0;
+            }
+        }
+    }
+    while (contador != 8)
+    {
+        bits <<= 1;
+        contador++;
+    }
+    output << bits;
+    output.close();
+}
+
+int codificar()
+{
+    vector<long long int> mapaHuffman;
+    mapaHuffman.resize(Char_size);
+    int error = 0;
+    long long int Contador[Char_size] = {0};
+    ifstream input_file("Datos-ICM-2019.csv", ios::binary);
+    if (!input_file.good())
+    {
+        perror("Error con el codigo\t");
+        error = 1;
+    }
+    char da;
+    while (input_file.get(da))
+        Contador[static_cast<unsigned char>(da)]++;
+    input_file.clear();
+    input_file.seekg(0);
+    nodo *arbol = Huffman(Contador);
+    ofstream output_file("codificado.icmbin", ios::binary);
+    if (!output_file.good())
+    {
+        perror("Error con el codigo\t");
+        error = 2;
+    }
+    output_file << arbol->Frecuencia;
+    output_file << ',';
+    Guardar_Arbol(output_file, arbol);
+    output_file << ' ';
+    char cod_simple[16];
+    Guardar_car(arbol, cod_simple, 0, mapaHuffman);
+    Escrbir_codif(input_file, output_file, mapaHuffman);
+    input_file.close();
+    output_file.close();
+    return error;
+}
+
+// Estructura del nodo del arbol de Huffman para poder decodificar
+struct Nodo
+{
+    unsigned char dato;
+    Nodo *izq;
+    Nodo *der;
+    Nodo(char c, Nodo *l = NULL, Nodo *r = NULL)
+    {
+        dato = c;
+        izq = l;
+        der = r;
+    }
+};
+// Crear el arbol de Huffman utilizando el archivo comprimido
+Nodo *CrearArbol(ifstream &input)
+{
+    char da;
+    input.get(da);
+    if (da == '1')
+    {
+        input.get(da);
+        return (new Nodo(da));
+    }
+    else
+    {
+        Nodo *izq = CrearArbol(input);
+        Nodo *der = CrearArbol(input);
+        return (new Nodo(-1, izq, der));
+    }
+}
+// Se hace uso de esta funcion para poder decodificar cada item binario de acuerdo al arbol creado
+void decodificar(ifstream &input, string Nom_archivo, Nodo *raiz, long long int Frecuencia_total)
+{
+    ofstream output((Nom_archivo.erase(Nom_archivo.size() - 4)).c_str(), ios::binary);
+    if (!output.good())
+    {
+        perror("Error:\t");
+        // exit(-1);
+    }
+    bool eof_flag = false;
+    char bits;
+    Nodo *puntero = raiz;
+    while (input.get(bits))
+    {
+        int contador = 7;
+        while (contador >= 0)
+        {
+            if (!puntero->izq && !puntero->der)
+            {
+                output << puntero->dato;
+                Frecuencia_total--;
+                if (!Frecuencia_total)
+                {
+                    eof_flag = true;
+                    break;
+                }
+                puntero = raiz;
+                continue;
+            }
+            if ((bits & (1 << contador)))
+            {
+                puntero = puntero->der;
+                contador--;
+            }
+            else
+            {
+                puntero = puntero->izq;
+                contador--;
+            }
+        }
+        if (eof_flag)
+            break;
+    }
+    output.close();
+}
+
+int decodificar()
+{
+    string Nom_archivo = "codificado.icmbin";
+    int error = 0;
+    ifstream abrir_archivo(Nom_archivo.c_str(), ios::binary);
+    if (!abrir_archivo.good())
+    {
+
+        perror("Error con el archivo\t");
+        error = 1;
+    }
+    if (Nom_archivo.find(".icmbin") == string::npos)
+    {
+        cout << "Error: El archivo ya esta descomprimido\n\n";
+        error = 2;
+    }
+    long long int Frecuencia_total = 0;
+    char da;
+    while (abrir_archivo.get(da))
+    {
+        if (da == ',')
+            break;
+        Frecuencia_total *= 10;
+        Frecuencia_total += da - '0';
+    }
+    Nodo *Arbol_Huffman = CrearArbol(abrir_archivo);
+    abrir_archivo.get(da);
+    decodificar(abrir_archivo, Nom_archivo, Arbol_Huffman, Frecuencia_total);
+    abrir_archivo.close();
+    return error;
 }

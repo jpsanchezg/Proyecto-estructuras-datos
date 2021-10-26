@@ -265,10 +265,47 @@ int main()
             }
             else if (tokens[i] == "codificar_archivoicm.bin")
             {
+                if (codificar() == 0)
+                {
+                    cout << endl;
+                    cout << "\tSe puedo codificar los municipios clasificaciones y datos del SC codificados y almacenados en codificado.icmbin" << endl;
+                    cout << endl;
+                }
+                else if (codificar() == 1)
+                {
+                    cout << endl;
+                    cout << "\tNo se pudo abrir el archivo de indice de ciudades" << endl;
+                    cout << endl;
+                }
+                else if (codificar() == 2)
+                {
+                    cout << endl;
+                    cout << "\tNo se pueden guardar los municipios del indice de ciudades modernas (ICM) en codificado.icmbin" << endl;
+                    cout << endl;
+                }
                 comandoEncontrado = true;
             }
             else if (tokens[i] == "decodificar_archivoicm.bin")
             {
+                if (decodificar() == 0)
+                {
+                    cout << endl;
+                    cout << "\tDatos del ICM decodificados desde codificado.icmbin y cargadas en memoria con el archivo codificado.ic" << endl;
+                    cout << endl;
+                }
+                else if (decodificar() == 1)
+                {
+                    cout << endl;
+                    cout << "\tNo se pueden cargar los datos desde codificado.icmbin" << endl;
+                    cout << endl;
+                }
+                else if (decodificar() == 2)
+                {
+                    cout << endl;
+                    cout << "\tEl archivo ya esta decodificado" << endl;
+                    cout << endl;
+                }
+
                 comandoEncontrado = true;
             }
             else if (tokens[i] == "ayuda")
