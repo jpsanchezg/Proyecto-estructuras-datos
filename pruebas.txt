@@ -11,6 +11,7 @@ uninodal
 capital_menor
 
 entrega 2
+carga_divipola DIVIPOLA_CentrosPoblados.csv
 carga_SC Datos-ICM-2019.csv
 aglomeracion
 uninodal

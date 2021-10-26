@@ -221,9 +221,20 @@ int main()
             }
             else if (tokens[i] == "reporte")
             {
-                reporte(SClista);
+
+                if (!SClista.empty())
+                {
+                    reporte(SClista);
+                }
+                else
+                {
+                    cout << endl;
+                    cout << "\tNo se puede generar el reporte porque no hay datos cargados en memoria" << endl;
+                    cout << endl;
+                }
                 comandoEncontrado = true;
             }
+
             else if (tokens[i] == "aglomeracion")
             {
                 Crear_Aglomeraciones(SClista, Aglomeraciones);
@@ -250,6 +261,14 @@ int main()
                     cout << "\tNo se pueden crear las ciudades uninodales a partir del Sistema de Ciudades cargado en memoria." << endl;
                     cout << endl;
                 }
+                comandoEncontrado = true;
+            }
+            else if (tokens[i] == "codificar_archivoicm.bin")
+            {
+                comandoEncontrado = true;
+            }
+            else if (tokens[i] == "decodificar_archivoicm.bin")
+            {
                 comandoEncontrado = true;
             }
             else if (tokens[i] == "ayuda")

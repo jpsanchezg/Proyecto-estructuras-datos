@@ -203,12 +203,12 @@ void Listar_Departamentos(list<Divipola> Departamentos, list<Divipola> Municipio
     list<Divipola>::iterator iter;
 
     cout << endl;
-    cout << "    CODIGO"
-         << "        "
+    cout << "\t\tCODIGO"
+         << "\t\t"
          << "NOMBRE"
-         << "               "
+         << "\t\t"
          << "NO. MUNICIPIOS"
-         << "    "
+         << "\t\t"
          << "NO. POBLACIONES" << endl;
     cout << endl;
 
@@ -216,7 +216,7 @@ void Listar_Departamentos(list<Divipola> Departamentos, list<Divipola> Municipio
     {
         int Contador_Municipios = 0;
         int Contador_Poblaciones = 0;
-        cout << "       " << iter->Codigo << "        " << iter->Nombre << "                   " << iter->Latitud << "                 " << iter->Longitud << endl;
+        cout << "\t\t" << iter->Codigo << "\t\t" << iter->Nombre << "\t\t" << iter->Latitud << "\t\t" << iter->Longitud << endl;
     }
     cout << endl;
 }
@@ -230,12 +230,12 @@ void Listar_Municipios_Poblaciones(string Codigo, list<Divipola> Lista)
     int Codigo2_Auxiliar;
 
     cout << endl;
-    cout << "    CODIGO"
-         << "       "
+    cout << "\t\tCODIGO"
+         << "\t\t "
          << "NOMBRE"
-         << "           "
+         << "\t\t"
          << "LATITUD"
-         << "           "
+         << "\t\t"
          << "LONGITUD" << endl;
     cout << endl;
 
@@ -246,7 +246,7 @@ void Listar_Municipios_Poblaciones(string Codigo, list<Divipola> Lista)
         Codigo2_Auxiliar = atoi(Codigo.c_str());
         if (Codigo1_Auxiliar == Codigo2_Auxiliar)
         {
-            cout << "      " << iter->Codigo << "    " << iter->Nombre << "        " << iter->Latitud << "       " << iter->Longitud << endl;
+            cout << "\t\t" << iter->Codigo << "\t\t" << iter->Nombre << "\t\t" << iter->Latitud << "\t\t" << iter->Longitud << endl;
         }
     }
     cout << endl;
@@ -462,7 +462,7 @@ void capitalesmenores(list<SistemaCiudades> SClista, list<ciudadescapitales> &Ci
     for (iter = SClista.begin(); iter != SClista.end(); ++iter)
     {
         poblacion = stoi(iter->personas);
-        if (poblacion < 100000)
+        if (poblacion < 100000 && iter->FuncionCiudades != "Fuera SC")
         {
             nodoCC.funcionCiudades = iter->FuncionCiudades;
             nodoCC.cod_dept = iter->cod_dept;
@@ -853,7 +853,7 @@ void reporte(list<SistemaCiudades> SClista)
          << "\t" << totalMunCME << "\t\t" << totPobCME << endl;
     cout << "\t\t Total sistema de ciudades (" << totalSC << ")"
          << "\t\t\t\t" << totalMuni << "\t\t" << totPobMun << endl;
-    cout << "\t\t % con respecto a colombia (" << totalMuni << ")"
+    cout << "\t\t % con respecto a colombia (" << totalCol << ")"
          << "\t\t\t" << probatot << "\t\t" << probapob << endl;
     cout << "\t\t Total colombia "
          << "\t\t\t\t\t" << totalCol << "\t\t" << totalpob << endl;
