@@ -17,7 +17,7 @@ using namespace std;
 
 bool ExistenciaDepto(string codigo, list<datosDiv> &lista)
 {
-cout,,asdas
+
     list<datosDiv>::iterator iter;
     for (iter = lista.begin(); iter != lista.end(); ++iter)
     {
