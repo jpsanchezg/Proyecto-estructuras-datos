@@ -13,8 +13,16 @@
 #include <sstream>
 #include <windows.h>
 #include <stdio.h>
+#include <cstdlib>
 
 using namespace std;
+
+string aMayuscula(string cadena)
+{
+    for (int i = 0; i < cadena.length(); i++)
+        cadena[i] = toupper(cadena[i]);
+    return cadena;
+}
 
 int main()
 {
@@ -22,9 +30,9 @@ int main()
     SetConsoleCP(1252);
     SetConsoleOutputCP(1252);
     string Entrada;
-    list<datosDiv> departamento;
-    list<datosDiv> municipio;
-    list<DatosPob> poblacion;
+    list<Divipola> Departamentos;
+    list<Divipola> Municipios;
+    list<Divipola> Poblaciones;
     list<SistemaCiudades> SClista;
     list<ciudadescapitales> ciudadesCapitales;
     list<Aglomeracion> Aglomeraciones;
@@ -64,26 +72,33 @@ int main()
             {
                 if (tokens[i + 1] == "DIVIPOLA_CentrosPoblados.csv")
                 {
-                    Cargar_divipola(departamento, municipio, poblacion);
-                    if (departamento.empty() == 0)
+                    Cargar_divipola(Departamentos, Municipios, Poblaciones);
+                    if (Departamentos.empty() == 0)
                     {
-                        cout << "La carga ha sido exitosa" << endl;
+                        cout << endl;
+                        cout << "\tSe cargaron correctamente " << Departamentos.size() << " departamentos, " << Municipios.size() << " municipios y " << Poblaciones.size() << " centros poblados desde " << endl;
+                        cout << "\tDIVIPOLA_CentrosPoblados.csv" << endl;
+                        cout << endl;
                     }
-                    if (departamento.empty() == 1)
+                    if (Departamentos.empty() == 1)
                     {
-                        cout << "La carga no ha sido exitosa" << endl;
+                        cout << endl;
+                        cout << "\tNo se pudo cargar correctamente la informaci�n desde DIVIPOLA_CentrosPoblados.csv" << endl;
+                        cout << endl;
                     }
                 }
                 else
                 {
-                    cout << "No se ha encontrado el archivo indicado" << endl;
-                    cout << "Dijite ayuda para solucionar su problema" << endl;
+                    cout << endl;
+                    cout << "\tNo se ha encontrado el archivo indicado" << endl;
+                    cout << "\tDijite ayuda para solucionar su problema" << endl;
+                    cout << endl;
                 }
                 comandoEncontrado = true;
             }
             else if (tokens[i] == "listar_departamentos")
             {
-                if (departamento.empty())
+                if (Departamentos.empty())
                 {
                     cout << endl;
                     cout << "\tNo hay departamentos cargados en memoria." << endl;
@@ -91,7 +106,7 @@ int main()
                 }
                 else
                 {
-                    Listar_Departamentos(departamento, municipio, poblacion);
+                    Listar_Departamentos(Departamentos, Municipios, Poblaciones);
                 }
                 comandoEncontrado = true;
             }
@@ -100,7 +115,7 @@ int main()
             {
                 codigodepto = tokens[i + 1]; // aca recoge el valor del codigo ejemplo listar_municipios 45 este recoge el 45 para luego ser buscado
 
-                if (ExistenciaDepto(codigodepto, departamento) == false)
+                if (Existencia_Departamento_Municipio(codigodepto, Departamentos) == false)
                 {
                     cout << endl;
                     cout << "\tNo hay municipios cargados en memoria para ese departamento." << endl;
@@ -108,7 +123,7 @@ int main()
                 }
                 else
                 {
-                    Listar_Municipios(codigodepto, municipio);
+                    Listar_Municipios_Poblaciones(codigodepto, Municipios);
                 }
 
                 comandoEncontrado = true;
@@ -117,22 +132,22 @@ int main()
             {
                 codigoMunicipio = tokens[i + 1]; // aca recoge el valor del codigo ejemplo listar_poblaciones 45 este recoge el 45 para luego ser buscado
 
-                if (ExistenciaMun(codigoMunicipio, municipio) == false)
+                if (Existencia_Departamento_Municipio(codigoMunicipio, Municipios) == false)
                 {
                     cout << endl;
-                    cout << "\tNo hay poblaciones cargadas en memoria para ese municipio." << endl;
+                    cout << "\tNo hay centros poblados cargados en memoria para ese municipio." << endl;
                     cout << endl;
                 }
                 else
                 {
-                    Listar_Poblaciones(codigoMunicipio, poblacion);
+                    Listar_Municipios_Poblaciones(codigoMunicipio, Poblaciones);
                 }
                 comandoEncontrado = true;
             }
             else if (tokens[i] == "info_sumaria")
             {
                 codigodepto = tokens[i + 1];
-                if (ExistenciaDepto(codigodepto, departamento) == false)
+                if (Existencia_Departamento_Municipio(codigodepto, Departamentos) == false)
                 {
                     cout << endl;
                     cout << "\tNo hay informacion cargada en memoria para ese departamento." << endl;
@@ -140,12 +155,7 @@ int main()
                 }
                 else
                 {
-                    vector<string> datos = Informacion(codigodepto, departamento, municipio, poblacion);
-
-                    cout
-                        << endl;
-                    cout << "\tEl departamento " << datos[2] << " esta conformado por " << datos[0] << " municipios y " << datos[1] << " centros poblados. " << endl;
-                    cout << endl;
+                    Nombre_Departamento(Departamentos, codigodepto);
                 }
                 comandoEncontrado = true;
             }
@@ -156,17 +166,23 @@ int main()
                     cargar_SC(SClista);
                     if (SClista.empty() == 0)
                     {
-                        cout << "La carga ha sido exitosa" << endl;
+                        cout << endl;
+                        cout << "\tLa carga ha sido exitosa" << endl;
+                        cout << endl;
                     }
                     if (SClista.empty() == 1)
                     {
-                        cout << "La carga no ha sido exitosa" << endl;
+                        cout << endl;
+                        cout << "\tLa carga no ha sido exitosa" << endl;
+                        cout << endl;
                     }
                 }
                 else
                 {
-                    cout << "No se ha encontrado el archivo indicado" << endl;
-                    cout << "Dijite ayuda para solucionar su problema" << endl;
+                    cout << endl;
+                    cout << "\tNo se ha encontrado el archivo indicado" << endl;
+                    cout << "\tDijite ayuda para solucionar su problema" << endl;
+                    cout << endl;
                 }
                 comandoEncontrado = true;
             }
@@ -174,7 +190,7 @@ int main()
             {
                 string cadena;
                 codigoMunicipio = tokens[i + 1]; // aca recoge el valor del codigo ejemplo esta_en_sistema 45 este recoge el 45 para luego ser buscado
-                if (ExistenciaMun(codigoMunicipio, municipio) == false)
+                if (Existencia_Departamento_Municipio(codigoMunicipio, Municipios) == false)
                 {
                     cout << endl;
                     cout << "\tNo hay informacion cargada en memoria para ese municipio." << endl;
@@ -182,29 +198,7 @@ int main()
                 }
                 else
                 {
-                    estaEnSistema(codigoMunicipio, SClista, municipio);
-                }
-                comandoEncontrado = true;
-            }
-            else if (tokens[i] == "aglomeracion")
-            {
-                Crear_Aglomeraciones(SClista, Aglomeraciones);
-                if (Aglomeraciones.empty())
-                {
-                    cout << "No se pueden crear las aglomeraciones urbanas a partir del Sistema de Ciudades cargado en memoria." << endl;
-                }
-                comandoEncontrado = true;
-            }
-            else if (tokens[i] == "uninodal")
-            {
-                Crear_Uninodales(SClista, Ciudades_Uninodales);
-                if (!Ciudades_Uninodales.empty())
-                {
-                    cout << "Se crearon " << Ciudades_Uninodales.size() << " ciudades uninodales." << endl;
-                }
-                else
-                {
-                    cout << "No se pueden crear las ciudades uninodales a partir del Sistema de Ciudades cargado en memoria." << endl;
+                    estaEnSistema(codigoMunicipio, SClista, Municipios);
                 }
                 comandoEncontrado = true;
             }
@@ -213,11 +207,15 @@ int main()
                 capitalesmenores(SClista, ciudadesCapitales);
                 if (!ciudadesCapitales.empty())
                 {
-                    cout << "se crearon " << ciudadesCapitales.size() << " ciudades capitales menores de cien mil habitantes" << endl;
+                    cout << endl;
+                    cout << "\tSe crearon " << ciudadesCapitales.size() << " ciudades capitales menores de cien mil habitantes" << endl;
+                    cout << endl;
                 }
                 else
                 {
-                    cout << "No se pueden crear las ciudades capitales menores de cien mil habitantes a partir del sistema de ciudades cargado en memoria" << endl;
+                    cout << endl;
+                    cout << "\tNo se pueden crear las ciudades capitales menores de cien mil habitantes a partir del sistema de ciudades cargado en memoria" << endl;
+                    cout << endl;
                 }
                 comandoEncontrado = true;
             }
@@ -226,22 +224,52 @@ int main()
                 reporte(SClista);
                 comandoEncontrado = true;
             }
+            else if (tokens[i] == "aglomeracion")
+            {
+                Crear_Aglomeraciones(SClista, Aglomeraciones);
+                if (Aglomeraciones.empty())
+                {
+                    cout << endl;
+                    cout << "\tNo se pueden crear las aglomeraciones urbanas a partir del Sistema de Ciudades cargado en memoria." << endl;
+                    cout << endl;
+                }
+                comandoEncontrado = true;
+            }
+            else if (tokens[i] == "uninodal")
+            {
+                Crear_Uninodales(SClista, Ciudades_Uninodales);
+                if (!Ciudades_Uninodales.empty())
+                {
+                    cout << endl;
+                    cout << "\tSe crearon " << Ciudades_Uninodales.size() << " ciudades uninodales." << endl;
+                    cout << endl;
+                }
+                else
+                {
+                    cout << endl;
+                    cout << "\tNo se pueden crear las ciudades uninodales a partir del Sistema de Ciudades cargado en memoria." << endl;
+                    cout << endl;
+                }
+                comandoEncontrado = true;
+            }
             else if (tokens[i] == "ayuda")
             {
                 string menuayuda = tokens[i + 1];
                 ayuda(menuayuda, comandoEncontrado);
             }
-            else if (tokens[i] == "Salir")
+            else if (tokens[i] == "salir")
             {
                 Salir = true;
                 comandoEncontrado = true;
             }
             if (!comandoEncontrado) // si el comando no se encuentra el arroja este error de comando no encontrado
             {
-                cout << "Comando no identificado" << endl;
-                cout << "Por favor ingrese ayuda con el comando que necesita ayuda con el comando  (ayuda listar_departamentos) o "
+                cout << endl;
+                cout << "\tComando no identificado" << endl;
+                cout << "\tPor favor ingrese ayuda con el comando que necesita ayuda con el comando  (ayuda listar_departamentos) o "
                      << "\n "
-                     << "dijite ayuda general para ver todos los comandos disponibles para ayudarlo para tener mas informacion de los comandos " << endl;
+                     << "\tDijite ayuda general para ver todos los comandos disponibles para ayudarlo para tener mas informacion de los comandos " << endl;
+                cout << endl;
                 tokens.clear();
             }
             else

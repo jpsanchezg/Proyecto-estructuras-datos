@@ -17,5 +17,6 @@ uninodal
 capital_menor
 reporte
 
-carga_divipola DIVIPOLA_CentrosPoblados.csv
-listar_municipios 99
+
+
+
