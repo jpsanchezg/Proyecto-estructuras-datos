@@ -167,7 +167,7 @@ int main()
                     if (SClista.empty() == 0)
                     {
                         cout << endl;
-                        cout << "\tLa carga ha sido exitosa" << endl;
+                        cout << "\tSe cargaron correctamente "<<SClista.size()<<" registros desde Datos-ICM-2019.csv" << endl;
                         cout << endl;
                     }
                     if (SClista.empty() == 1)
