@@ -858,7 +858,10 @@ void reporte(list<SistemaCiudades> SClista)
     cout << "\t\t Total sistema de ciudades (" << totalSC << ")"
          << "\t\t\t\t" << totalMuni << "\t\t" << totPobMun << endl;
     cout << "\t\t % con respecto a colombia (" << totalCol << ")"
-         << "\t\t\t" << probatot << "\t\t" << probapob << endl;
+         << "\t\t\t"
+         << probatot << " %"
+         << "\t\t"
+         << probapob << " %" << endl;
     cout << "\t\t Total colombia "
          << "\t\t\t\t\t" << totalCol << "\t\t" << totalpob << endl;
 }
