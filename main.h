@@ -29,7 +29,7 @@ struct SistemaCiudades // estructura para la lista de sistema de ciudades
     string personas;
     string hectareas;
 
-    double **distancias = new double *[MAX_SIZE];
+    double **distancias;
 };
 
 struct ciudadescapitales

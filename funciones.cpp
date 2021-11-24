@@ -17,8 +17,8 @@
 #include <windows.h>
 #include <iomanip>
 #include <math.h>
-#define MAX_SIZE 1123
-#define MAX_SIZEcol 113
+#define MAX_SIZE 12
+#define MAX_SIZEcol 112
 #define PI 3.14159265358979323846
 #define Char_size 256
 using namespace std;
@@ -163,8 +163,8 @@ void cargar_SC(list<SistemaCiudades> &SClista, list<Divipola> Municipio)
     setlocale(LC_ALL, "spanish");
     getline(fout2, linea); // se omite la primera linea del archivo que no contiene nada importante
     while (getline(fout2, linea))
-
     {
+
         SistemaCiudades nodo;
 
         stringstream stream(linea); // convertir la cadena a un stream
@@ -183,11 +183,7 @@ void cargar_SC(list<SistemaCiudades> &SClista, list<Divipola> Municipio)
         getline(stream, nodo.personas, delimitador);
 
         getline(stream, nodo.hectareas, delimitador);
-        //nodo.distancias = new double *[MAX_SIZE];
-        for (int i = 0; i < MAX_SIZE; i++)
-        {
-            nodo.distancias[i] = new double[MAX_SIZEcol];
-        }
+
         SClista.push_back(nodo);
     }
     fout2.close();
@@ -1269,7 +1265,11 @@ void distanciaAglo(string aglomeracion, list<Aglomeracion> Aglomeraciones, list<
     //  cout << iterdistancia->Codigo << " : " << iterdistancia->distanciakm << endl
     for (int i = tammatrix; i < tammatrix + 1; i++)
     {
-
+        itersistema->distancias = new double *[tammatrix];
+        for (int i = 0; i < MAX_SIZE; i++)
+        {
+            itersistema->distancias[i] = new double[Ldistancias.size()];
+        }
         for (iterdistancia = Ldistancias.begin(); iterdistancia != Ldistancias.end(); ++iterdistancia)
         {
             itersistema->distancias[i][0] = codigo;
