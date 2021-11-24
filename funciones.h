@@ -27,7 +27,7 @@ vector<string> buscarpoblacion(string codigomun, string codigopob, list<Divipola
 
 void reporte(list<SistemaCiudades> SClista);
 
-int Accion_Aglomeracion(list<Aglomeracion> Aglomeraciones, int indicador, Municipios_Ciudades Elemento, string Funcion);
+bool Verificar_Aglomeracion(list<Aglomeracion> &Aglomeraciones, string Nombre_Aglomeracion);
 
 void Crear_Aglomeraciones(list<SistemaCiudades> SClista, list<Aglomeracion> &Aglomeraciones);
 
