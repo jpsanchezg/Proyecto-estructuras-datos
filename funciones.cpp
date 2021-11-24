@@ -395,6 +395,33 @@ void ayuda(string menuayuda, bool &comandoEncontrado)
              << "                                                  mostrarlo decodificado en pantalla" << endl;
         comandoEncontrado = true;
     }
+    if (menuayuda == "distancia")
+    {
+        cout << "DISTANCIA Aglomeracion                         " << '\t' << "El comando debe calcular la distancia en kilómetros entre el centro "
+             <<"                                                    de la aglomeración y cada una de las ciudades en la aglomeración      "
+             <<"                                                  utilizando los datos de latitud y longitud que tienen los       "
+             <<"                                                        municipios en la Divipola y guardarlos en la estructura  "
+             <<"                                                               del Sistema de Ciudades" << endl;
+        comandoEncontrado = true;
+    }
+    if (menuayuda == "ruta_mas_corta")
+    {
+        cout << "RUTA_MAS_CORTA Aglomeracion                    " << '\t' << "El comando debe imprimir en pantalla la secuencia de vértices del   "
+             <<"                                                    grafo que describen la ruta más corta entre el centro de la secuencia "
+             <<"                                                  aglomeracion y cada una de las ciudades en la aglomeración. Así "
+             <<"                                                        mismo, debe imprimir el costo total de la ruta en        "
+             <<"                                                               kilómetros" << endl;
+        comandoEncontrado = true;
+    }
+    if (menuayuda == "ciudad_remota")
+    {
+        cout << "CIUDAD_REMOTA Aglomeracion                    " << '\t' << "Para la ciudad centro de la aglomeración el comando busca la ciudad  "
+             <<"                                                   en la aglomeración más remota, y debe imprimir en pantalla la         "
+             <<"                                                  secuencia de vértices que describen la ruta entre el centro de  "
+             <<"                                                        de la aglomeracion y la ciudad en la aglomeracion mas    "
+             <<"                                                               más remota, y el costo total de la ruta en kilometros" << endl;
+        comandoEncontrado = true;
+    }
     if (menuayuda == "salir")
     {
         cout << "SALIR  " << '\t' << "El comando permite finalizar la ejecuci�n del programa" << endl;
@@ -451,6 +478,24 @@ void ayuda(string menuayuda, bool &comandoEncontrado)
              << "                                                    binario nombre_archivo.icmbin , que contiene una codificaci�n Huffman "
              << "                                                  de toda la informaci�n que compone el �ndice de Ciudades Modernas"
              << "                                                       y debe mostrarlo decodificado en pantalla" << endl;
+        cout << endl;
+        cout << "DISTANCIA Aglomeracion                         " << '\t' << "El comando debe calcular la distancia en kilómetros entre el centro "
+             <<"                                                    de la aglomeración y cada una de las ciudades en la aglomeración      "
+             <<"                                                  utilizando los datos de latitud y longitud que tienen los       "
+             <<"                                                        municipios en la Divipola y guardarlos en la estructura  "
+             <<"                                                               del Sistema de Ciudades" << endl;
+        cout << endl;
+        cout << "RUTA_MAS_CORTA Aglomeracion                    " << '\t' << "El comando debe imprimir en pantalla la secuencia de vértices del   "
+             <<"                                                    grafo que describen la ruta más corta entre el centro de la secuencia "
+             <<"                                                  aglomeracion y cada una de las ciudades en la aglomeración. Así "
+             <<"                                                        mismo, debe imprimir el costo total de la ruta en        "
+             <<"                                                               kilómetros" << endl;
+        cout << endl;
+        cout << "CIUDAD_REMOTA Aglomeracion                    " << '\t' << "Para la ciudad centro de la aglomeración el comando busca la ciudad  "
+             <<"                                                   en la aglomeración más remota, y debe imprimir en pantalla la         "
+             <<"                                                  secuencia de vértices que describen la ruta entre el centro de  "
+             <<"                                                        de la aglomeracion y la ciudad en la aglomeracion mas    "
+             <<"                                                               más remota, y el costo total de la ruta en kilometros" << endl;
         cout << endl;
         cout << "SALIR                                          " << '\t' << "Termina la ejecucion de la aplicacion." << endl;
         comandoEncontrado = true;
