@@ -1,5 +1,6 @@
 #include <string.h>
 #include <iostream>
+#define MAX_SIZE 1123
 using namespace std;
 
 struct Divipola
@@ -8,9 +9,16 @@ struct Divipola
     string Nombre;
     string Latitud;
     string Longitud;
+    int numerodistancias;
 };
 
-struct SistemaCiudades //estructura para la lista de sistema de ciudades
+struct distancia
+{
+    string Codigo;
+    double distanciakm;
+};
+
+struct SistemaCiudades // estructura para la lista de sistema de ciudades
 {
     string aglomeracion;
     string FuncionCiudades;
@@ -20,6 +28,8 @@ struct SistemaCiudades //estructura para la lista de sistema de ciudades
     string anio;
     string personas;
     string hectareas;
+
+    double **distancias = new double *[MAX_SIZE];
 };
 
 struct ciudadescapitales

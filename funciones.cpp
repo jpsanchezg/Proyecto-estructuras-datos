@@ -11,11 +11,15 @@
 #include <conio.h>
 #include <list>
 #include "funciones.h"
+#include "sstream"
 #include <vector>
-
 #include <stdio.h>
 #include <windows.h>
-
+#include <iomanip>
+#include <math.h>
+#define MAX_SIZE 1123
+#define MAX_SIZEcol 113
+#define PI 3.14159265358979323846
 #define Char_size 256
 using namespace std;
 
@@ -123,7 +127,7 @@ void Cargar_divipola(list<Divipola> &Departamentos, list<Divipola> &Municipios, 
             getline(stream, Municipio_Auxiliar.Latitud, delimitador);
 
             getline(stream, Municipio_Auxiliar.Longitud, delimitador);
-
+            Municipio_Auxiliar.numerodistancias = 0;
             Municipios.push_back(Municipio_Auxiliar);
 
             Contar_Municipios_Poblaciones(Departamentos, Municipio_Auxiliar.Codigo, 0);
@@ -150,7 +154,7 @@ void Cargar_divipola(list<Divipola> &Departamentos, list<Divipola> &Municipios, 
     fout.close();
 }
 
-void cargar_SC(list<SistemaCiudades> &SClista)
+void cargar_SC(list<SistemaCiudades> &SClista, list<Divipola> Municipio)
 {
     string linea;
     fstream fout2;
@@ -179,7 +183,11 @@ void cargar_SC(list<SistemaCiudades> &SClista)
         getline(stream, nodo.personas, delimitador);
 
         getline(stream, nodo.hectareas, delimitador);
-
+        //nodo.distancias = new double *[MAX_SIZE];
+        for (int i = 0; i < MAX_SIZE; i++)
+        {
+            nodo.distancias[i] = new double[MAX_SIZEcol];
+        }
         SClista.push_back(nodo);
     }
     fout2.close();
@@ -1161,4 +1169,133 @@ int decodificar()
     decodificar(abrir_archivo, Nom_archivo, Arbol_Huffman, Frecuencia_total);
     abrir_archivo.close();
     return error;
+}
+
+bool Existencia_Aglomeracion(string codglomeracion, list<SistemaCiudades> &Lista)
+{
+    list<SistemaCiudades>::iterator iter;
+    for (iter = Lista.begin(); iter != Lista.end(); ++iter)
+    {
+        if (iter->divipola == codglomeracion)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+double convertToRadians(double val)
+{
+    return val * PI / 180;
+}
+
+double calcularDistanciaEntreDosCoordenadas(double lat1, double lon1, double lat2, double lon2)
+{
+    // Convertir todas las coordenadas a radianes
+    lat1 = convertToRadians(lat1);
+    lon1 = convertToRadians(lon1);
+    lat2 = convertToRadians(lat2);
+    lon2 = convertToRadians(lon2);
+    // Aplicar fórmula
+    double RADIO_TIERRA_EN_KILOMETROS = 6371;
+    double diferenciaEntreLongitudes = (lon2 - lon1);
+    double diferenciaEntreLatitudes = (lat2 - lat1);
+    double a = pow(sin(diferenciaEntreLatitudes / 2.0), 2) + cos(lat1) * cos(lat2) * pow(sin(diferenciaEntreLongitudes / 2.0), 2);
+    double c = 2 * atan2(sqrt(a), sqrt(1 - a));
+    double d = RADIO_TIERRA_EN_KILOMETROS * c;
+    return d;
+}
+double strtodouble(string str)
+{
+    double d;
+    istringstream(str) >> d;
+    return d;
+}
+
+void distanciaAglo(string aglomeracion, list<Aglomeracion> Aglomeraciones, list<Divipola> &Municipios, list<SistemaCiudades> &SClista, list<distancia> Ldistancias)
+{
+    long double PIx = 3.141592653589793;
+    double RADIO_TIERRA_EN_KILOMETROS = 6371;
+    list<Divipola>::iterator itermuni;
+    list<Divipola>::iterator itermunicl;
+    list<SistemaCiudades>::iterator itersistema;
+    list<distancia>::iterator iterdistancia;
+    distancia dist;
+    int contador = 1;
+    double lat1, lat2, lon1, lon2;
+    double diskm;
+    double codigo = stod(aglomeracion.c_str());
+    int tammatrix = 0;
+    int i = 0, j = 0;
+
+    for (itermuni = Municipios.begin(); itermuni != Municipios.end(); ++itermuni)
+    {
+        if (itermuni->Codigo == aglomeracion)
+        {
+            tammatrix = itermuni->numerodistancias;
+            // cout << "hola putitaaa " << tammatrix << endl;
+            lat1 = strtodouble(itermuni->Latitud);
+            lon1 = strtodouble(itermuni->Longitud);
+        }
+    }
+    for (itersistema = SClista.begin(); itersistema != SClista.end(); ++itersistema)
+    {
+
+        for (itermuni = Municipios.begin(); itermuni != Municipios.end(); ++itermuni)
+        {
+
+            if ((itersistema->FuncionCiudades.compare("En aglomeracion")) == 0 && (itermuni->Codigo == itersistema->divipola))
+            {
+                lat2 = strtodouble(itermuni->Latitud);
+                lon2 = strtodouble(itermuni->Longitud);
+                diskm = calcularDistanciaEntreDosCoordenadas(lat1, lon1, lat2, lon2);
+                dist.Codigo = itermuni->Codigo;
+                dist.distanciakm = diskm;
+                Ldistancias.push_back(dist);
+            }
+            if ((itersistema->FuncionCiudades.compare("Centro aglomeracion")) == 0 && (itermuni->Codigo == itersistema->divipola))
+            {
+                lat2 = strtodouble(itermuni->Latitud);
+                lon2 = strtodouble(itermuni->Longitud);
+                diskm = calcularDistanciaEntreDosCoordenadas(lat1, lon1, lat2, lon2);
+                dist.Codigo = itermuni->Codigo;
+                dist.distanciakm = diskm;
+                Ldistancias.push_back(dist);
+            }
+        }
+    }
+    double anteriorkm = 0;
+    // cout << tammatrix << endl;
+    //  cout << iterdistancia->Codigo << " : " << iterdistancia->distanciakm << endl
+    for (int i = tammatrix; i < tammatrix + 1; i++)
+    {
+
+        for (iterdistancia = Ldistancias.begin(); iterdistancia != Ldistancias.end(); ++iterdistancia)
+        {
+            itersistema->distancias[i][0] = codigo;
+            itersistema->distancias[i][j] = iterdistancia->distanciakm;
+            // cout << iterdistancia->dstanciakm << " : " << itersistema->distancias[i][j] << endl;
+            anteriorkm = iterdistancia->distanciakm;
+            j++;
+        }
+    }
+
+    for (int i = tammatrix; i < tammatrix + 1; i++)
+    {
+
+        // itersistema->distancia[i][0] = codigo;
+        for (int j = 0; j < Ldistancias.size(); j++)
+        {
+            cout << itersistema->distancias[i][j] << "   ";
+        }
+    }
+
+    for (itermunicl = Municipios.begin(); itermunicl != Municipios.end(); ++itermunicl)
+    {
+        if (itermunicl->Codigo == aglomeracion)
+        {
+            itermunicl->numerodistancias = itermunicl->numerodistancias + 1;
+            cout << itermunicl->numerodistancias << endl;
+        }
+    }
 }

@@ -14,7 +14,7 @@
 #include <windows.h>
 #include <stdio.h>
 #include <cstdlib>
-
+//#define V 1123
 using namespace std;
 
 string aMayuscula(string cadena)
@@ -29,7 +29,9 @@ int main()
     setlocale(LC_CTYPE, "");
     SetConsoleCP(1252);
     SetConsoleOutputCP(1252);
+    int tamgrf = 1123;
     string Entrada;
+
     list<Divipola> Departamentos;
     list<Divipola> Municipios;
     list<Divipola> Poblaciones;
@@ -37,6 +39,7 @@ int main()
     list<ciudadescapitales> ciudadesCapitales;
     list<Aglomeracion> Aglomeraciones;
     list<Municipios_Ciudades> Ciudades_Uninodales;
+    list<distancia> Ldistancias;
     string linea;
     string codigodepto;
     string codigoMunicipio;
@@ -46,6 +49,7 @@ int main()
     do
     {
         comandoEncontrado = false;
+
         cout << "$";
 
         getline(cin, Entrada);
@@ -163,11 +167,11 @@ int main()
             {
                 if (tokens[i + 1] == "Datos-ICM-2019.csv")
                 {
-                    cargar_SC(SClista);
+                    cargar_SC(SClista,Municipios);
                     if (SClista.empty() == 0)
                     {
                         cout << endl;
-                        cout << "\tSe cargaron correctamente "<<SClista.size()<<" registros desde Datos-ICM-2019.csv" << endl;
+                        cout << "\tSe cargaron correctamente " << SClista.size() << " registros desde Datos-ICM-2019.csv" << endl;
                         cout << endl;
                     }
                     if (SClista.empty() == 1)
@@ -306,6 +310,22 @@ int main()
                     cout << endl;
                 }
 
+                comandoEncontrado = true;
+            }
+            else if (tokens[i] == "distancia")
+            {
+                string aglomeracion;
+                aglomeracion = tokens[i + 1];
+                if (Existencia_Aglomeracion(aglomeracion, SClista) == false)
+                {
+                    cout << endl;
+                    cout << "\tNo hay informacion cargada en memoria para esa aglomeracion." << endl;
+                    cout << endl;
+                }
+                else
+                {
+                    distanciaAglo(aglomeracion, Aglomeraciones, Municipios,SClista,Ldistancias);
+                }
                 comandoEncontrado = true;
             }
             else if (tokens[i] == "ayuda")

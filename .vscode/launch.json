@@ -8,6 +8,7 @@
             "name": "g++.exe - Compilar y depurar el archivo activo",
             "type": "cppdbg",
             "request": "launch",
+            "trace": true,
             "program": "${fileDirname}\\${fileBasenameNoExtension}.exe",
             "args": [],
             "stopAtEntry": false,

@@ -3,9 +3,11 @@
 
 bool Existencia_Departamento_Municipio(string Codigo, list<Divipola> &Lista);
 
+bool Existencia_Aglomeracion(string codglomeracion, list<SistemaCiudades> &Lista);
+
 void Cargar_divipola(list<Divipola> &Departamentos, list<Divipola> &Municipios, list<Divipola> &Poblaciones);
 
-void cargar_SC(list<SistemaCiudades> &SClista);
+void cargar_SC(list<SistemaCiudades> &SClista, list<Divipola> Municipio);
 
 void Nombre_Departamento(list<Divipola> Departamentos, string Codigo_Departamento);
 
@@ -35,4 +37,7 @@ int codificar();
 
 int decodificar();
 
+double convertToRadians(double val);
+
+void distanciaAglo(string aglomeracion, list<Aglomeracion> Aglomeraciones, list<Divipola> &Municipios, list<SistemaCiudades> &SClista, list<distancia> Ldistancias);
 #endif
