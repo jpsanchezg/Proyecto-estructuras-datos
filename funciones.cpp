@@ -526,38 +526,37 @@ void capitalesmenores(list<SistemaCiudades> SClista, list<ciudadescapitales> &Ci
     }
 }
 
-int Accion_Aglomeracion(list<Aglomeracion> Aglomeraciones, int indicador, Municipios_Ciudades Elemento, string Funcion)
+bool Verificar_Aglomeracion(list<Aglomeracion> &Aglomeraciones, string Nombre_Aglomeracion)
 {
-    list<Aglomeracion>::iterator iter;
-
-    for (iter = Aglomeraciones.begin(); iter != Aglomeraciones.end(); iter++)
+    bool bandera = true;
+    if (Aglomeraciones.empty())
     {
-        if ((iter->Nombre) == Elemento.Nombre_Aglomeracion)
-        {
-            if (indicador == 0)
-            {
-                return 1;
-            }
-            else if (indicador == 1)
-            {
-                iter->Ciudad_Principal = Elemento;
-            }
-            else if (indicador == 2)
-            {
-                (iter->Ciudades_Componentes).push_back(Elemento);
-            }
-        }
-    }
-    if (indicador == 0)
-    {
-        if ((Funcion == "Centro aglomeracion") || (Funcion == "En aglomeracion"))
-            return 0;
+        bandera = false;
     }
     else
     {
-        return 2;
+        list<Aglomeracion>::iterator iter;
+
+        for(iter = Aglomeraciones.begin(); iter != Aglomeraciones.end(); iter ++)
+        {
+            if ((iter -> Nombre) == Nombre_Aglomeracion)
+            {
+                return 0;
+            }
+            else
+            {
+                bandera = false;
+            }
+        }
     }
-    return -1;
+    if (bandera == false)
+    {
+        Aglomeracion Auxiliar;
+        Auxiliar.Nombre = Nombre_Aglomeracion;
+        Aglomeraciones.push_back(Auxiliar);
+        return 1;
+    }
+    return 0;
 }
 
 void Crear_Aglomeraciones(list<SistemaCiudades> SClista, list<Aglomeracion> &Aglomeraciones)
@@ -566,33 +565,48 @@ void Crear_Aglomeraciones(list<SistemaCiudades> SClista, list<Aglomeracion> &Agl
     list<Aglomeracion>::iterator iter_aux;
 
     Municipios_Ciudades Auxiliar_Componente;
-    Aglomeracion Auxiliar;
     int Contador_Aglomeraciones = 0;
     int Contador_Ciudades = 0;
 
-    for (iter = SClista.begin(); iter != SClista.end(); iter++)
+    for(iter = SClista.begin(); iter != SClista.end(); iter++)
     {
-        Auxiliar_Componente.Divipola = iter->divipola;
-        Auxiliar_Componente.Nombre = iter->nom_mpio;
-        Auxiliar_Componente.Personas = iter->personas;
-        Auxiliar_Componente.Hectareas = iter->hectareas;
-        Auxiliar_Componente.Nombre_Aglomeracion = iter->aglomeracion;
+        Auxiliar_Componente.Divipola = iter -> divipola;
+        Auxiliar_Componente.Nombre = iter -> nom_mpio;
+        Auxiliar_Componente.Personas = iter -> personas;
+        Auxiliar_Componente.Hectareas = iter -> hectareas;
+        Auxiliar_Componente.Nombre_Aglomeracion = iter -> aglomeracion;
 
-        if ((Accion_Aglomeracion(Aglomeraciones, 0, Auxiliar_Componente, iter->FuncionCiudades)) == 0)
+        if ((iter -> FuncionCiudades) == "Centro aglomeracion")
         {
-            Auxiliar.Nombre = iter->aglomeracion;
-            Aglomeraciones.push_back(Auxiliar);
-            Contador_Aglomeraciones += 1;
-        }
+            if (Verificar_Aglomeracion(Aglomeraciones, iter -> aglomeracion) == 1)
+            {
+                Contador_Aglomeraciones += 1;
+            }
 
-        if ((iter->FuncionCiudades) == "Centro aglomeracion")
-        {
-            Accion_Aglomeracion(Aglomeraciones, 1, Auxiliar_Componente, iter->FuncionCiudades);
+            for(iter_aux = Aglomeraciones.begin(); iter_aux != Aglomeraciones.end(); iter_aux ++)
+            {
+                if ((iter_aux -> Nombre) == iter -> aglomeracion)
+                {
+                    iter_aux -> Ciudad_Principal = Auxiliar_Componente;
+                    iter_aux -> Ciudades_Componentes.push_back(Auxiliar_Componente);
+                }
+            }
             Contador_Ciudades += 1;
         }
-        else if ((iter->FuncionCiudades) == "En aglomeracion")
+        else if ((iter -> FuncionCiudades) == "En aglomeracion")
         {
-            Accion_Aglomeracion(Aglomeraciones, 2, Auxiliar_Componente, iter->FuncionCiudades);
+            if (Verificar_Aglomeracion(Aglomeraciones, iter -> aglomeracion) == 1)
+            {
+                Contador_Aglomeraciones += 1;
+            }
+
+            for(iter_aux = Aglomeraciones.begin(); iter_aux != Aglomeraciones.end(); iter_aux ++)
+            {
+                if ((iter_aux -> Nombre) == iter -> aglomeracion)
+                {
+                    iter_aux -> Ciudades_Componentes.push_back(Auxiliar_Componente);
+                }
+            }
             Contador_Ciudades += 1;
         }
     }
