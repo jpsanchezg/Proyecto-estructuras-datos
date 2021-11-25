@@ -23,8 +23,10 @@ decodificar_archivoicm.bin
 entrega 3
 carga_divipola DIVIPOLA_CentrosPoblados.csv
 carga_SC Datos-ICM-2019.csv
-distancia 5088
-distancia 5001
+distancia A-Medellin
+distancia A-Bogota
+distancia A-Bucaramanga
+
 
 
 distancia 5088

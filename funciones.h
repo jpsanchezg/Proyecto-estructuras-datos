@@ -39,5 +39,5 @@ int decodificar();
 
 double convertToRadians(double val);
 
-void distanciaAglo(string aglomeracion, list<Aglomeracion> Aglomeraciones, list<Divipola> &Municipios, list<SistemaCiudades> &SClista, list<distancia> Ldistancias);
+void distanciaAglo(string aglomeracion, list<Aglomeracion> &Aglomeraciones, list<Divipola> &Municipios, list<SistemaCiudades> &SClista, list<distancia> Ldistancias);
 #endif

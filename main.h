@@ -9,7 +9,7 @@ struct Divipola
     string Nombre;
     string Latitud;
     string Longitud;
-    int numerodistancias;
+    
 };
 
 struct distancia
@@ -28,8 +28,6 @@ struct SistemaCiudades // estructura para la lista de sistema de ciudades
     string anio;
     string personas;
     string hectareas;
-
-    double **distancias;
 };
 
 struct ciudadescapitales
@@ -54,4 +52,7 @@ struct Aglomeracion
     string Nombre;
     Municipios_Ciudades Ciudad_Principal;
     list<Municipios_Ciudades> Ciudades_Componentes;
+    double **Distancias;
+    double **DistanciasMenores;
+    string **Nodos_Anteriores;
 };
