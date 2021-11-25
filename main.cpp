@@ -328,6 +328,21 @@ int main()
                 }
                 comandoEncontrado = true;
             }
+            else if (tokens[i] == "ciudad_remota")
+            {
+                string Nombre_Aglomeracion;
+                Nombre_Aglomeracion = tokens[i + 1]
+                    if (Existencia_Aglomeracion(aglomeracion,SClista) == false)
+                    {
+                        cout<< endl;
+                        cout << "La aglomeración dada no existe." << endl;
+                        cout << endl;
+                    }
+                else
+                {
+                    cout << "El costo total en kilómetros de la ruta más larga es K kilómetros y corresponde a la ciudad C en la aglomeración." << endl;
+                }
+            }
             else if (tokens[i] == "ayuda")
             {
                 string menuayuda = tokens[i + 1];

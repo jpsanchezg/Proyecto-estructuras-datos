@@ -395,6 +395,33 @@ void ayuda(string menuayuda, bool &comandoEncontrado)
              << "                                                  mostrarlo decodificado en pantalla" << endl;
         comandoEncontrado = true;
     }
+    if (menuayuda == "distancia")
+    {
+        cout << "DISTANCIA Aglomeracion                         " << '\t' << "El comando debe calcular la distancia en kilómetros entre el centro "
+             <<"                                                    de la aglomeración y cada una de las ciudades en la aglomeración      "
+             <<"                                                  utilizando los datos de latitud y longitud que tienen los       "
+             <<"                                                        municipios en la Divipola y guardarlos en la estructura  "
+             <<"                                                               del Sistema de Ciudades" << endl;
+        comandoEncontrado = true;
+    }
+    if (menuayuda == "ruta_mas_corta")
+    {
+        cout << "RUTA_MAS_CORTA Aglomeracion                    " << '\t' << "El comando debe imprimir en pantalla la secuencia de vértices del   "
+             <<"                                                    grafo que describen la ruta más corta entre el centro de la secuencia "
+             <<"                                                  aglomeracion y cada una de las ciudades en la aglomeración. Así "
+             <<"                                                        mismo, debe imprimir el costo total de la ruta en        "
+             <<"                                                               kilómetros" << endl;
+        comandoEncontrado = true;
+    }
+    if (menuayuda == "ciudad_remota")
+    {
+        cout << "CIUDAD_REMOTA Aglomeracion                    " << '\t' << "Para la ciudad centro de la aglomeración el comando busca la ciudad  "
+             <<"                                                   en la aglomeración más remota, y debe imprimir en pantalla la         "
+             <<"                                                  secuencia de vértices que describen la ruta entre el centro de  "
+             <<"                                                        de la aglomeracion y la ciudad en la aglomeracion mas    "
+             <<"                                                               más remota, y el costo total de la ruta en kilometros" << endl;
+        comandoEncontrado = true;
+    }
     if (menuayuda == "salir")
     {
         cout << "SALIR  " << '\t' << "El comando permite finalizar la ejecuci�n del programa" << endl;
@@ -452,6 +479,24 @@ void ayuda(string menuayuda, bool &comandoEncontrado)
              << "                                                  de toda la informaci�n que compone el �ndice de Ciudades Modernas"
              << "                                                       y debe mostrarlo decodificado en pantalla" << endl;
         cout << endl;
+        cout << "DISTANCIA Aglomeracion                         " << '\t' << "El comando debe calcular la distancia en kilómetros entre el centro "
+             <<"                                                    de la aglomeración y cada una de las ciudades en la aglomeración      "
+             <<"                                                  utilizando los datos de latitud y longitud que tienen los       "
+             <<"                                                        municipios en la Divipola y guardarlos en la estructura  "
+             <<"                                                               del Sistema de Ciudades" << endl;
+        cout << endl;
+        cout << "RUTA_MAS_CORTA Aglomeracion                    " << '\t' << "El comando debe imprimir en pantalla la secuencia de vértices del   "
+             <<"                                                    grafo que describen la ruta más corta entre el centro de la secuencia "
+             <<"                                                  aglomeracion y cada una de las ciudades en la aglomeración. Así "
+             <<"                                                        mismo, debe imprimir el costo total de la ruta en        "
+             <<"                                                               kilómetros" << endl;
+        cout << endl;
+        cout << "CIUDAD_REMOTA Aglomeracion                    " << '\t' << "Para la ciudad centro de la aglomeración el comando busca la ciudad  "
+             <<"                                                   en la aglomeración más remota, y debe imprimir en pantalla la         "
+             <<"                                                  secuencia de vértices que describen la ruta entre el centro de  "
+             <<"                                                        de la aglomeracion y la ciudad en la aglomeracion mas    "
+             <<"                                                               más remota, y el costo total de la ruta en kilometros" << endl;
+        cout << endl;
         cout << "SALIR                                          " << '\t' << "Termina la ejecucion de la aplicacion." << endl;
         comandoEncontrado = true;
     }
@@ -481,38 +526,37 @@ void capitalesmenores(list<SistemaCiudades> SClista, list<ciudadescapitales> &Ci
     }
 }
 
-int Accion_Aglomeracion(list<Aglomeracion> Aglomeraciones, int indicador, Municipios_Ciudades Elemento, string Funcion)
+bool Verificar_Aglomeracion(list<Aglomeracion> &Aglomeraciones, string Nombre_Aglomeracion)
 {
-    list<Aglomeracion>::iterator iter;
-
-    for (iter = Aglomeraciones.begin(); iter != Aglomeraciones.end(); iter++)
+    bool bandera = true;
+    if (Aglomeraciones.empty())
     {
-        if ((iter->Nombre) == Elemento.Nombre_Aglomeracion)
-        {
-            if (indicador == 0)
-            {
-                return 1;
-            }
-            else if (indicador == 1)
-            {
-                iter->Ciudad_Principal = Elemento;
-            }
-            else if (indicador == 2)
-            {
-                (iter->Ciudades_Componentes).push_back(Elemento);
-            }
-        }
-    }
-    if (indicador == 0)
-    {
-        if ((Funcion == "Centro aglomeracion") || (Funcion == "En aglomeracion"))
-            return 0;
+        bandera = false;
     }
     else
     {
-        return 2;
+        list<Aglomeracion>::iterator iter;
+
+        for(iter = Aglomeraciones.begin(); iter != Aglomeraciones.end(); iter ++)
+        {
+            if ((iter -> Nombre) == Nombre_Aglomeracion)
+            {
+                return 0;
+            }
+            else
+            {
+                bandera = false;
+            }
+        }
     }
-    return -1;
+    if (bandera == false)
+    {
+        Aglomeracion Auxiliar;
+        Auxiliar.Nombre = Nombre_Aglomeracion;
+        Aglomeraciones.push_back(Auxiliar);
+        return 1;
+    }
+    return 0;
 }
 
 void Crear_Aglomeraciones(list<SistemaCiudades> SClista, list<Aglomeracion> &Aglomeraciones)
@@ -521,33 +565,48 @@ void Crear_Aglomeraciones(list<SistemaCiudades> SClista, list<Aglomeracion> &Agl
     list<Aglomeracion>::iterator iter_aux;
 
     Municipios_Ciudades Auxiliar_Componente;
-    Aglomeracion Auxiliar;
     int Contador_Aglomeraciones = 0;
     int Contador_Ciudades = 0;
 
-    for (iter = SClista.begin(); iter != SClista.end(); iter++)
+    for(iter = SClista.begin(); iter != SClista.end(); iter++)
     {
-        Auxiliar_Componente.Divipola = iter->divipola;
-        Auxiliar_Componente.Nombre = iter->nom_mpio;
-        Auxiliar_Componente.Personas = iter->personas;
-        Auxiliar_Componente.Hectareas = iter->hectareas;
-        Auxiliar_Componente.Nombre_Aglomeracion = iter->aglomeracion;
+        Auxiliar_Componente.Divipola = iter -> divipola;
+        Auxiliar_Componente.Nombre = iter -> nom_mpio;
+        Auxiliar_Componente.Personas = iter -> personas;
+        Auxiliar_Componente.Hectareas = iter -> hectareas;
+        Auxiliar_Componente.Nombre_Aglomeracion = iter -> aglomeracion;
 
-        if ((Accion_Aglomeracion(Aglomeraciones, 0, Auxiliar_Componente, iter->FuncionCiudades)) == 0)
+        if ((iter -> FuncionCiudades) == "Centro aglomeracion")
         {
-            Auxiliar.Nombre = iter->aglomeracion;
-            Aglomeraciones.push_back(Auxiliar);
-            Contador_Aglomeraciones += 1;
-        }
+            if (Verificar_Aglomeracion(Aglomeraciones, iter -> aglomeracion) == 1)
+            {
+                Contador_Aglomeraciones += 1;
+            }
 
-        if ((iter->FuncionCiudades) == "Centro aglomeracion")
-        {
-            Accion_Aglomeracion(Aglomeraciones, 1, Auxiliar_Componente, iter->FuncionCiudades);
+            for(iter_aux = Aglomeraciones.begin(); iter_aux != Aglomeraciones.end(); iter_aux ++)
+            {
+                if ((iter_aux -> Nombre) == iter -> aglomeracion)
+                {
+                    iter_aux -> Ciudad_Principal = Auxiliar_Componente;
+                    iter_aux -> Ciudades_Componentes.push_back(Auxiliar_Componente);
+                }
+            }
             Contador_Ciudades += 1;
         }
-        else if ((iter->FuncionCiudades) == "En aglomeracion")
+        else if ((iter -> FuncionCiudades) == "En aglomeracion")
         {
-            Accion_Aglomeracion(Aglomeraciones, 2, Auxiliar_Componente, iter->FuncionCiudades);
+            if (Verificar_Aglomeracion(Aglomeraciones, iter -> aglomeracion) == 1)
+            {
+                Contador_Aglomeraciones += 1;
+            }
+
+            for(iter_aux = Aglomeraciones.begin(); iter_aux != Aglomeraciones.end(); iter_aux ++)
+            {
+                if ((iter_aux -> Nombre) == iter -> aglomeracion)
+                {
+                    iter_aux -> Ciudades_Componentes.push_back(Auxiliar_Componente);
+                }
+            }
             Contador_Ciudades += 1;
         }
     }
