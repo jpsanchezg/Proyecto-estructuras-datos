@@ -53,6 +53,6 @@ struct Aglomeracion
     Municipios_Ciudades Ciudad_Principal;
     list<Municipios_Ciudades> Ciudades_Componentes;
     double **Distancias;
-    double **DistanciasMenores;
+    double **Distancias_Menores;
     string **Nodos_Anteriores;
 };
